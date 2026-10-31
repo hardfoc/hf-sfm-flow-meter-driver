@@ -10,9 +10,9 @@ has_children: true
 
 # HF-SFM driver documentation
 
-This site mirrors the [`docs/`](https://github.com/N3b3x/hf-sfm-flow-meter-driver/tree/main/docs) folder in the repository and documents the **Sensirion SF06 I²C command set** (SFM4300 data sheet §4) as implemented by this header-only driver. The same command set is shared by SFM3003, SFM3013, SFM3019 and SFM3119.
+This site mirrors the [`docs/`](https://github.com/hardfoc/hf-sfm-flow-meter-driver/tree/main/docs) folder in the repository and documents the **Sensirion SF06 I²C command set** (SFM4300 data sheet §4) as implemented by this header-only driver. The same command set is shared by SFM3003, SFM3013, SFM3019 and SFM3119.
 
-> **Browse on GitHub:** [repository home](https://github.com/N3b3x/hf-sfm-flow-meter-driver) · [Issues](https://github.com/N3b3x/hf-sfm-flow-meter-driver/issues)
+> **Browse on GitHub:** [repository home](https://github.com/hardfoc/hf-sfm-flow-meter-driver) · [Issues](https://github.com/hardfoc/hf-sfm-flow-meter-driver/issues)
 
 ## Documentation structure
 

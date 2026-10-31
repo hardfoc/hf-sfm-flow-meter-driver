@@ -21,7 +21,7 @@ The driver is **header-only**. CMake generates `sfm_version.h` and exposes an
 ## As a git submodule
 
 ```bash
-git submodule add https://github.com/N3b3x/hf-sfm-flow-meter-driver.git external/hf-sfm-flow-meter-driver
+git submodule add https://github.com/hardfoc/hf-sfm-flow-meter-driver.git external/hf-sfm-flow-meter-driver
 git submodule update --init --recursive
 ```
 
