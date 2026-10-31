@@ -16,8 +16,8 @@ Every received word is **CRC-8** checked (poly 0x31, init 0xFF).
 
 [![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://en.cppreference.com/w/cpp/17)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![CI](https://github.com/N3b3x/hf-sfm-flow-meter-driver/actions/workflows/esp32-examples-build-ci.yml/badge.svg?branch=main)](https://github.com/N3b3x/hf-sfm-flow-meter-driver/actions/workflows/esp32-examples-build-ci.yml)
-[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://n3b3x.github.io/hf-sfm-flow-meter-driver/)
+[![CI](https://github.com/hardfoc/hf-sfm-flow-meter-driver/actions/workflows/esp32-examples-build-ci.yml/badge.svg?branch=main)](https://github.com/hardfoc/hf-sfm-flow-meter-driver/actions/workflows/esp32-examples-build-ci.yml)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://hardfoc.github.io/hf-sfm-flow-meter-driver/)
 
 ## Table of contents
 
@@ -31,7 +31,7 @@ Every received word is **CRC-8** checked (poly 0x31, init 0xFF).
 
 ## Overview
 
-> **[Live documentation (GitHub Pages)](https://n3b3x.github.io/hf-sfm-flow-meter-driver/)** —
+> **[Live documentation (GitHub Pages)](https://hardfoc.github.io/hf-sfm-flow-meter-driver/)** —
 > Installation, I²C protocol tables, CMake, API summary, and troubleshooting.
 
 The driver targets host firmware that closes a control loop on the flow reading:

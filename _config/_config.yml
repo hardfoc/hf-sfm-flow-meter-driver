@@ -114,19 +114,19 @@ toggle_auto_mode: true
 # -----------------------------------------------------------------------------
 aux_links:
   "📚 GitHub Repository":
-    - "https://github.com/N3b3x/hf-sfm-flow-meter-driver"
+    - "https://github.com/hardfoc/hf-sfm-flow-meter-driver"
   "🐛 Report Issues":
-    - "https://github.com/N3b3x/hf-sfm-flow-meter-driver/issues"
+    - "https://github.com/hardfoc/hf-sfm-flow-meter-driver/issues"
   "⭐ Star on GitHub":
-    - "https://github.com/N3b3x/hf-sfm-flow-meter-driver/stargazers"
+    - "https://github.com/hardfoc/hf-sfm-flow-meter-driver/stargazers"
 
 # -----------------------------------------------------------------------------
 # Footer Customization
 # -----------------------------------------------------------------------------
 footer_content: >
   Built with ❤️ using <a href='https://just-the-docs.github.io/just-the-docs/'>Just the Docs</a> •
-  <a href='https://github.com/N3b3x/hf-sfm-flow-meter-driver/blob/main/LICENSE'>MIT License</a> •
-  <a href='https://github.com/N3b3x/hf-sfm-flow-meter-driver'>View on GitHub</a>
+  <a href='https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/main/LICENSE'>MIT License</a> •
+  <a href='https://github.com/hardfoc/hf-sfm-flow-meter-driver'>View on GitHub</a>
 
 # -----------------------------------------------------------------------------
 # File Exclusions
@@ -168,7 +168,7 @@ seo:
   description: >
     Header-only C++17 I2C driver for Sensirion SFM4300 / SF06 flow meters (continuous measurement, CRC-8, scale/offset)
     with ESP32-S3 example
-  url: "https://n3b3x.github.io/hf-sfm-flow-meter-driver"
+  url: "https://hardfoc.github.io/hf-sfm-flow-meter-driver"
   twitter:
     card: "summary_large_image"
     site: "@n3b3x"
@@ -182,7 +182,7 @@ seo:
 social:
   name: "HardFOC SFM Flow Meter Driver"
   links:
-    - "https://github.com/N3b3x/hf-sfm-flow-meter-driver"
+    - "https://github.com/hardfoc/hf-sfm-flow-meter-driver"
     - "https://github.com/n3b3x"
 
 # -----------------------------------------------------------------------------
@@ -201,9 +201,9 @@ just_the_docs:
   nav_fold: true
   nav_external_links:
     - title: "📚 GitHub Repository"
-      url: "https://github.com/N3b3x/hf-sfm-flow-meter-driver"
+      url: "https://github.com/hardfoc/hf-sfm-flow-meter-driver"
     - title: "🐛 Issues"
-      url: "https://github.com/N3b3x/hf-sfm-flow-meter-driver/issues"
+      url: "https://github.com/hardfoc/hf-sfm-flow-meter-driver/issues"
   head_custom: _includes/head_custom.html
   custom_css:
     - assets/css/custom.css
