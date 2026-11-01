@@ -1,0 +1,12 @@
+<map id="inc/sfm_types.hpp" name="inc/sfm_types.hpp">
+<area shape="rect" id="Node000001" title="Flow&#45;meter types: families, gases, variants, readings, status word, results." alt="" coords="126,5,267,33"/>
+<area shape="rect" id="Node000002" href="$sfm__commands_8hpp.html" title="I2C command codes, addresses, timing and CRC&#45;8 for Sensirion flow meters: the SF06 family (SFM4300 da..." alt="" coords="5,81,159,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,35,117,75,114,70,178,32"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="152,157,217,184"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="198,32,189,142,184,140,193,35"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="234,81,330,109"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="213,31,258,70,253,71,211,36"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="47,157,117,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="84,107,85,142,79,140,80,111"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="101,107,157,147,151,148,100,112"/>
+</map>

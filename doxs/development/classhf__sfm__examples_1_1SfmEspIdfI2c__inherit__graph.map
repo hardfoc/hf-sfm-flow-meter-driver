@@ -1,0 +1,5 @@
+<map id="hf_sfm_examples::SfmEspIdfI2c&lt; kPort, kSdaGpio, kSclGpio, kSpeedHz, kTimeoutMs &gt;" name="hf_sfm_examples::SfmEspIdfI2c&lt; kPort, kSdaGpio, kSclGpio, kSpeedHz, kTimeoutMs &gt;">
+<area shape="rect" id="Node000001" title="Template I2C bridge: one concrete type per (port, SDA, SCL, speed) tuple." alt="" coords="5,98,234,160"/>
+<area shape="rect" id="Node000002" href="$classsfm_1_1I2cInterface.html" title="CRTP base for the SF06 I2C transport." alt="" coords="48,5,191,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,63,122,99,117,97,118,68"/>
+</map>
