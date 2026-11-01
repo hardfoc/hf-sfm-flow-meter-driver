@@ -54,9 +54,10 @@ extern "C" void app_main(void) {
         if (!m.ok()) {
             ESP_LOGW(TAG, "read failed: %s", sfm::ToString(m.error).data());
         } else {
+            const sfm::Gas gas =
+                sfm::GasFromStatusNibble(dev.PartFamily(), m.value.status.command_nibble());
             ESP_LOGI(TAG, "flow=%.3f slm  T=%.2f C  status=0x%04X (%s%s)", m.value.flow,
-                     m.value.temperature_c, m.value.status.raw,
-                     sfm::ToString(sfm::GasFromStatusNibble(m.value.status.command_nibble())).data(),
+                     m.value.temperature_c, m.value.status.raw, sfm::ToString(gas).data(),
                      m.value.status.fixed_n_averaging() ? ", fixed-N" : "");
         }
         vTaskDelay(pdMS_TO_TICKS(1000));
