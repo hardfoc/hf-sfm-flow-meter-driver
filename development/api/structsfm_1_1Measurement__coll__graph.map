@@ -1,0 +1,5 @@
+<map id="sfm::Measurement" name="sfm::Measurement">
+<area shape="rect" id="Node000001" title="One continuous&#45;mode sample (data sheet §4.3.1 read frame)." alt="" coords="5,98,150,126"/>
+<area shape="rect" id="Node000002" href="$structsfm_1_1StatusWord.html" title="Decoded status word (data sheet §4.3.2, Table 5)." alt="" coords="13,5,142,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,47,80,98,75,97,75,50"/>
+</map>

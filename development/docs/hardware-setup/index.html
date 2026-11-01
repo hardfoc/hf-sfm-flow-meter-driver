@@ -1,0 +1,461 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+  <link rel="stylesheet" href="/hf-sfm-flow-meter-driver/development/assets/css/just-the-docs-default.css">
+
+  <link rel="stylesheet" href="/hf-sfm-flow-meter-driver/development/assets/css/just-the-docs-head-nav.css" id="jtd-head-nav-stylesheet">
+
+  <style id="jtd-nav-activation">
+  
+
+    .site-nav > ul.nav-list:first-child > li > a,
+    .site-nav > ul.nav-list:first-child > li > ul > li > a,
+    
+    .site-nav > ul.nav-list:first-child > li > ul > li > ul > li:not(:nth-child(4)) > a,
+    .site-nav > ul.nav-list:first-child > li > ul > li > ul > li > ul > li a {
+      background-image: none;
+    }
+
+    .site-nav > ul.nav-list:not(:first-child) a,
+    .site-nav li.external a {
+      background-image: none;
+    }
+
+    .site-nav > ul.nav-list:first-child > li:nth-child(1) > ul > li:nth-child(1) > ul > li:nth-child(4) > a {
+      font-weight: 600;
+      text-decoration: none;
+    }.site-nav > ul.nav-list:first-child > li:nth-child(1) > button svg,
+    .site-nav > ul.nav-list:first-child > li:nth-child(1) > ul > li:nth-child(1) > button svg,
+    .site-nav > ul.nav-list:first-child > li:nth-child(1) > ul > li:nth-child(1) > ul > li:nth-child(4) > button svg {
+      transform: rotate(-90deg);
+    }.site-nav > ul.nav-list:first-child > li.nav-list-item:nth-child(1) > ul.nav-list,
+    .site-nav > ul.nav-list:first-child > li.nav-list-item:nth-child(1) > ul.nav-list > li.nav-list-item:nth-child(1) > ul.nav-list,
+    .site-nav > ul.nav-list:first-child > li.nav-list-item:nth-child(1) > ul.nav-list > li.nav-list-item:nth-child(1) > ul.nav-list > li.nav-list-item:nth-child(4) > ul.nav-list {
+      display: block;
+    }
+  </style>
+
+  
+
+  
+    <script src="/hf-sfm-flow-meter-driver/development/assets/js/vendor/lunr.min.js"></script>
+  
+
+  <script src="/hf-sfm-flow-meter-driver/development/assets/js/just-the-docs.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Hardware setup | HardFOC SFM Flow Meter Driver - development</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Hardware setup" />
+<meta name="author" content="N3b3x" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Header-only C++17 I2C driver for Sensirion SFM4300 / SF06-family gas mass flow meters (continuous measurement, CRC-8 framing, scale/offset/unit, status word) with ESP32-S3 example" />
+<meta property="og:description" content="Header-only C++17 I2C driver for Sensirion SFM4300 / SF06-family gas mass flow meters (continuous measurement, CRC-8 framing, scale/offset/unit, status word) with ESP32-S3 example" />
+<link rel="canonical" href="https://n3b3x.github.io/hf-sfm-flow-meter-driver/development/docs/hardware-setup/" />
+<meta property="og:url" content="https://n3b3x.github.io/hf-sfm-flow-meter-driver/development/docs/hardware-setup/" />
+<meta property="og:site_name" content="HardFOC SFM Flow Meter Driver - development" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Hardware setup" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"N3b3x","url":"https://github.com/n3b3x"},"description":"Header-only C++17 I2C driver for Sensirion SFM4300 / SF06-family gas mass flow meters (continuous measurement, CRC-8 framing, scale/offset/unit, status word) with ESP32-S3 example","headline":"Hardware setup","url":"https://n3b3x.github.io/hf-sfm-flow-meter-driver/development/docs/hardware-setup/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  <!-- =============================================================================
+     Custom Head Content for HardFOC Driver Documentation
+     =============================================================================
+     This file is included in the <head> section of every page.
+     It loads custom CSS and JavaScript for enhanced functionality.
+     ============================================================================= -->
+
+<!-- Custom CSS for enhanced styling and fixes -->
+<link rel="stylesheet" href="/hf-sfm-flow-meter-driver/development/assets/css/custom.css">
+
+<!-- Custom JavaScript for interactive features -->
+<script src="/hf-sfm-flow-meter-driver/development/assets/js/custom.js" defer></script>
+
+
+
+</head>
+
+<body>
+  <a class="skip-to-main" href="#main-content">Skip to main content</a>
+  <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="svg-link" viewBox="0 0 24 24">
+  <title>Link</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+  </svg>
+</symbol>
+
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+  <title>Menu</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+    <line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+</symbol>
+
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+  <title>Expand</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+    <polyline points="9 18 15 12 9 6"></polyline>
+  </svg>
+</symbol>
+
+  <!-- Feather. MIT License: https://github.com/feathericons/feather/blob/master/LICENSE -->
+<symbol id="svg-external-link" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link">
+  <title id="svg-external-link-title">(external link)</title>
+  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line>
+</symbol>
+
+  
+    <symbol id="svg-doc" viewBox="0 0 24 24">
+  <title>Document</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
+    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline>
+  </svg>
+</symbol>
+
+    <symbol id="svg-search" viewBox="0 0 24 24">
+  <title>Search</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+    <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+  </svg>
+</symbol>
+
+  
+  
+    <!-- Bootstrap Icons. MIT License: https://github.com/twbs/icons/blob/main/LICENSE.md -->
+<symbol id="svg-copy" viewBox="0 0 16 16">
+  <title>Copy</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+  </svg>
+</symbol>
+<symbol id="svg-copied" viewBox="0 0 16 16">
+  <title>Copied</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check-fill" viewBox="0 0 16 16">
+    <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z"/>
+    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z"/>
+  </svg>
+</symbol>
+
+  
+</svg>
+
+  
+    <header class="side-bar">
+  <div class="site-header">
+    <a href="/hf-sfm-flow-meter-driver/development/" class="site-title lh-tight">
+  HardFOC SFM Flow Meter Driver - development
+
+</a>
+    <button id="menu-button" class="site-button btn-reset" aria-label="Menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use xlink:href="#svg-menu"></use></svg>
+    </button>
+  </div>
+
+  <nav aria-label="Main" id="site-nav" class="site-nav">
+  
+  
+    <ul class="nav-list"><li class="nav-list-item"><button class="nav-list-expander btn-reset" aria-label="HardFOC SFM Flow Meter Driver submenu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use xlink:href="#svg-arrow-right"></use></svg>
+      </button><a href="/hf-sfm-flow-meter-driver/development/" class="nav-list-link">HardFOC SFM Flow Meter Driver</a><ul class="nav-list"><li class="nav-list-item"><button class="nav-list-expander btn-reset" aria-label="Documentation submenu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use xlink:href="#svg-arrow-right"></use></svg>
+      </button><a href="/hf-sfm-flow-meter-driver/development/docs/" class="nav-list-link">Documentation</a><ul class="nav-list"><li class="nav-list-item"><a href="/hf-sfm-flow-meter-driver/development/docs/installation/" class="nav-list-link">Installation</a></li><li class="nav-list-item"><a href="/hf-sfm-flow-meter-driver/development/docs/quickstart/" class="nav-list-link">Quick start</a></li><li class="nav-list-item"><a href="/hf-sfm-flow-meter-driver/development/docs/i2c-protocol/" class="nav-list-link">I²C protocol</a></li><li class="nav-list-item"><a href="/hf-sfm-flow-meter-driver/development/docs/hardware-setup/" class="nav-list-link">Hardware setup</a></li><li class="nav-list-item"><a href="/hf-sfm-flow-meter-driver/development/docs/cmake-integration/" class="nav-list-link">CMake integration</a></li><li class="nav-list-item"><a href="/hf-sfm-flow-meter-driver/development/docs/api-reference/" class="nav-list-link">API reference</a></li><li class="nav-list-item"><a href="/hf-sfm-flow-meter-driver/development/docs/examples/" class="nav-list-link">Examples</a></li><li class="nav-list-item"><a href="/hf-sfm-flow-meter-driver/development/docs/troubleshooting/" class="nav-list-link">Troubleshooting</a></li><li class="nav-list-item"><a href="/hf-sfm-flow-meter-driver/development/docs/datasheet/" class="nav-list-link">Datasheets and links</a></li></ul></li></ul></li><li class="nav-list-item"><a href="/hf-sfm-flow-meter-driver/development/examples/esp32/" class="nav-list-link">ESP32 examples — HF-SFM (Sensirion SFM4300 / SF06 family)</a></li><li class="nav-list-item"><a href="/hf-sfm-flow-meter-driver/development/THIRD_PARTY_NOTICES.html" class="nav-list-link">Third-party notices</a></li></ul>
+  
+</nav>
+
+
+<div class="d-md-block d-none site-footer">
+  
+  
+    This site uses <a href="https://github.com/just-the-docs/just-the-docs">Just the Docs</a>, a documentation theme for Jekyll.
+  
+  </div>
+</header>
+
+  
+  <div class="main" id="top">
+    <div id="main-header" class="main-header">
+  
+    
+
+<div class="search" role="search">
+  <div class="search-input-wrap">
+    <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="Search HardFOC SFM Flow Meter Driver - development" autocomplete="off">
+    <label for="search-input" class="search-label">
+      <span class="sr-only">Search HardFOC SFM Flow Meter Driver - development</span>
+      <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true"><use xlink:href="#svg-search"></use></svg>
+    </label>
+  </div>
+  <div id="search-results" class="search-results"></div>
+</div>
+
+  
+  
+  
+    <nav aria-label="Auxiliary" class="aux-nav">
+  <ul class="aux-nav-list">
+    
+      <li class="aux-nav-list-item">
+        <a href="/hf-sfm-flow-meter-driver/development/api/index.html" class="site-button"
+          
+        >
+          📖 API Reference
+        </a>
+      </li>
+    
+      <li class="aux-nav-list-item">
+        <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver" class="site-button"
+          
+        >
+          📚 GitHub Repository
+        </a>
+      </li>
+    
+      <li class="aux-nav-list-item">
+        <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/issues" class="site-button"
+          
+        >
+          🐛 Report Issues
+        </a>
+      </li>
+    
+      <li class="aux-nav-list-item">
+        <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/stargazers" class="site-button"
+          
+        >
+          ⭐ Star on GitHub
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+  
+</div>
+
+    <div class="main-content-wrap">
+      <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+  <ol class="breadcrumb-nav-list">
+    <li class="breadcrumb-nav-list-item"><a href="/hf-sfm-flow-meter-driver/development/">HardFOC SFM Flow Meter Driver</a></li>
+    <li class="breadcrumb-nav-list-item"><a href="/hf-sfm-flow-meter-driver/development/docs/">Documentation</a></li>
+    <li class="breadcrumb-nav-list-item"><span>Hardware setup</span></li>
+  </ol>
+</nav>
+
+
+      <div id="main-content" class="main-content">
+        <main>
+          
+            <h1 id="hardware-setup">
+  
+  
+    <a href="#hardware-setup" class="anchor-heading" aria-labelledby="hardware-setup"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Hardware setup
+  
+  
+</h1>
+    
+<h2 id="electrical">
+  
+  
+    <a href="#electrical" class="anchor-heading" aria-labelledby="electrical"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Electrical
+  
+  
+</h2>
+    
+
+<ul>
+  <li>Supply <strong>3.0–5.5 V</strong> (SFM4300); I²C lines at the supply level.</li>
+  <li>I²C <strong>400 kHz</strong> standard, up to <strong>1 MHz Fm+</strong>; external pull-ups required.</li>
+  <li><code class="language-plaintext highlighter-rouge">IRQn</code> (open-drain, active-low) pulses at 2 kHz / N when a new average is
+ready; optional.</li>
+</ul>
+<h2 id="address-sfm4300-addr-pin">
+  
+  
+    <a href="#address-sfm4300-addr-pin" class="anchor-heading" aria-labelledby="address-sfm4300-addr-pin"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Address (SFM4300 <code class="language-plaintext highlighter-rouge">ADDR</code> pin)
+  
+  
+</h2>
+    
+
+<div class="table-wrapper"><table>
+  <thead>
+    <tr>
+      <th>ADDR</th>
+      <th>7-bit address</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GND or floating</td>
+      <td><code class="language-plaintext highlighter-rouge">0x2A</code></td>
+    </tr>
+    <tr>
+      <td>GND via 1.2 kΩ</td>
+      <td><code class="language-plaintext highlighter-rouge">0x2B</code></td>
+    </tr>
+    <tr>
+      <td>GND via 2.7 kΩ</td>
+      <td><code class="language-plaintext highlighter-rouge">0x2C</code></td>
+    </tr>
+    <tr>
+      <td>GND via 5.6 kΩ</td>
+      <td><code class="language-plaintext highlighter-rouge">0x2D</code></td>
+    </tr>
+  </tbody>
+</table></div>
+
+<p>Other SF06 parts: SFM3119 <code class="language-plaintext highlighter-rouge">0x29</code>, SFM3003 <code class="language-plaintext highlighter-rouge">0x28</code>, SFM3013 <code class="language-plaintext highlighter-rouge">0x2F</code>, SFM3019 <code class="language-plaintext highlighter-rouge">0x2E</code>.</p>
+<h2 id="fittings-sfm4300">
+  
+  
+    <a href="#fittings-sfm4300" class="anchor-heading" aria-labelledby="fittings-sfm4300"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Fittings (SFM4300)
+  
+  
+</h2>
+    
+
+<div class="table-wrapper"><table>
+  <thead>
+    <tr>
+      <th>Suffix</th>
+      <th>Connection</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-B</code></td>
+      <td>basemount — base plate with 7 mm inner-diameter ports, O-ring sealed; fix with the side screw holes only</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-O</code></td>
+      <td>O-rings</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-P</code></td>
+      <td>8 mm Legris push-in fittings (8 mm OD tube)</td>
+    </tr>
+  </tbody>
+</table></div>
+<h2 id="gas-tables-by-variant">
+  
+  
+    <a href="#gas-tables-by-variant" class="anchor-heading" aria-labelledby="gas-tables-by-variant"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Gas tables by variant
+  
+  
+</h2>
+    
+
+<div class="table-wrapper"><table>
+  <thead>
+    <tr>
+      <th>Variant</th>
+      <th>Range</th>
+      <th>Calibrated tables</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SFM4300-20-x</td>
+      <td>0–20 slm</td>
+      <td>O2, Air, N2O, CO2, Air/O2, N2O/O2, CO2/O2</td>
+    </tr>
+    <tr>
+      <td>SFM4300-50-x</td>
+      <td>0–50 slm</td>
+      <td><strong>O2, Air, Air/O2 only</strong></td>
+    </tr>
+  </tbody>
+</table></div>
+
+<p>The driver enforces this once the variant is known (<code class="language-plaintext highlighter-rouge">ReadProductIdentifier()</code>
+or <code class="language-plaintext highlighter-rouge">AssumeVariant()</code>): <code class="language-plaintext highlighter-rouge">StartContinuous(Gas::CO2)</code> on a 50 slm part returns
+<code class="language-plaintext highlighter-rouge">DriverError::UnsupportedGas</code>. Running a thermal flow sensor with the wrong gas
+table yields large systematic errors — do not paper over this in the application.</p>
+<h2 id="pressure-and-orientation">
+  
+  
+    <a href="#pressure-and-orientation" class="anchor-heading" aria-labelledby="pressure-and-orientation"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Pressure and orientation
+  
+  
+</h2>
+    
+
+<p>Rated to 6 bar (line pressure), pressure drop &lt; 25 mbar at 20 slm (-20) and
+&lt; 100 mbar at 50 slm (-50). Keep straight tube length upstream per the data
+sheet for the stated accuracy.</p>
+
+<p><strong>Next:</strong> <a href="/hf-sfm-flow-meter-driver/development/docs/cmake-integration/">CMake integration →</a></p>
+
+          
+
+          
+            
+          
+        </main>
+        
+<hr>
+<footer>
+  
+
+  <!-- =============================================================================
+     Custom Footer Content for HardFOC Driver Documentation
+     =============================================================================
+     This footer is displayed at the bottom of every page.
+     ============================================================================= -->
+
+<footer class="site-footer">
+  <div class="site-footer-credits">
+    <p>Built with ❤️ using <a href="https://just-the-docs.github.io/just-the-docs/">Just the Docs</a></p>
+    <p>
+      <a href="https://github.com/n3b3x/hf-sfm-flow-meter-driver/development/blob/main/LICENSE">GPL v3 License</a> • 
+      <a href="https://github.com/n3b3x/hf-sfm-flow-meter-driver/development">View on GitHub</a>
+    </p>
+  </div>
+</footer>
+
+
+
+  <div class="d-md-none mt-4 fs-2">
+    
+    
+      This site uses <a href="https://github.com/just-the-docs/just-the-docs">Just the Docs</a>, a documentation theme for Jekyll.
+    
+  </div>
+</footer>
+
+      </div>
+    </div>
+    
+      
+<button id="search-button" class="search-button btn-reset" aria-label="Focus on search">
+  <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use xlink:href="#svg-search"></use></svg>
+</button>
+
+
+<div class="search-overlay"></div>
+
+    
+  </div>
+
+  
+</body>
+</html>
+

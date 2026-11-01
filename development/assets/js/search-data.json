@@ -1,0 +1,457 @@
+{"0": {
+    "doc": "Datasheets and links",
+    "title": "Datasheets (local copies)",
+    "content": "Place vendor PDFs here (Sensirion SFM4300 data sheet; SFM3003 / SFM3013 / SFM3019 / SFM3119 sheets if those parts are used). Paths under this folder are ignored from strict driver linting in CI where applicable. Official references: . | Sensirion SFM4300 product page and data sheet (command set §4, scaling §4.5) | Sensirion/embedded-i2c-sfm-sf06 — reference C driver (BSD-3), see THIRD_PARTY_NOTICES.md | . Back: Documentation home → . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/datasheet/#datasheets-local-copies",
+    
+    "relUrl": "/docs/datasheet/#datasheets-local-copies"
+  },"1": {
+    "doc": "Datasheets and links",
+    "title": "Datasheets and links",
+    "content": " ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/datasheet/",
+    
+    "relUrl": "/docs/datasheet/"
+  },"2": {
+    "doc": "HardFOC SFM Flow Meter Driver",
+    "title": "HF-SFM Flow Meter Driver",
+    "content": "Header-only C++17 I²C driver for Sensirion SF06-family gas mass flow meters (SFM4300-20/-50, SFM3003, SFM3013, SFM3019, SFM3119): continuous measurement per gas / binary mixture, single-frame flow + temperature + status read, on-sensor averaging, scale/offset/unit query, sleep, product identifier, general-call reset. Every received word is CRC-8 checked (poly 0x31, init 0xFF). ",
+    "url": "/hf-sfm-flow-meter-driver/development/#hf-sfm-flow-meter-driver",
+    
+    "relUrl": "/#hf-sfm-flow-meter-driver"
+  },"3": {
+    "doc": "HardFOC SFM Flow Meter Driver",
+    "title": "Table of contents",
+    "content": ". | Overview | Features | Quick start | Documentation | Examples | Official references | License | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/#table-of-contents",
+    
+    "relUrl": "/#table-of-contents"
+  },"4": {
+    "doc": "HardFOC SFM Flow Meter Driver",
+    "title": "Overview",
+    "content": "Live documentation (GitHub Pages) — Installation, I²C protocol tables, CMake, API summary, and troubleshooting. The driver targets host firmware that closes a control loop on the flow reading: the sensor samples every 0.5 ms (τ63 &lt; 5 ms) and, in average-until-read mode, each read returns the mean since the previous read — so a fixed-rate poll is anti-aliased without host filtering. Scale factor, offset and unit are read from the device per gas table, and the product identifier is decoded into a Variant so that gas tables the part does not carry (e.g. CO2 on SFM4300-50-x) are refused instead of silently mis-measured. ",
+    "url": "/hf-sfm-flow-meter-driver/development/#overview",
+    
+    "relUrl": "/#overview"
+  },"5": {
+    "doc": "HardFOC SFM Flow Meter Driver",
+    "title": "Features",
+    "content": ". | CRTP sfm::I2cInterface&lt;Derived&gt; — no virtual calls; you provide Write / Read / DelayMs / EnsureInitialized (+ optional general call). | sfm::Driver&lt;I2cT&gt; — StartContinuous(Gas, o2‰), ReadMeasurement, ReadFlowOnly, ConfigureAveraging, UpdateConcentration, Stop, ReadScaleOffsetUnit, ReadProductIdentifier, EnterSleep / ExitSleep, SoftReset. | Typed results — DriverResult&lt;T&gt; with stable DriverError codes (NoData for the data-sheet NACK, Crc, UnsupportedGas, …). | Status word decode — running command, averaging mode, gas fraction. | No heap allocation; fits FreeRTOS / bare metal. | Host tests (-DHF_SFM_BUILD_TESTS=ON) with a fake I²C replaying data-sheet frames; ESP32-S3 examples. | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/#features",
+    
+    "relUrl": "/#features"
+  },"6": {
+    "doc": "HardFOC SFM Flow Meter Driver",
+    "title": "Quick start",
+    "content": "CMake: . | 1 2 . | add_subdirectory(/path/to/hf-sfm-flow-meter-driver) target_link_libraries(your_target PRIVATE hf::sfm) . | . Code: . | 1 2 3 4 5 6 7 8 . | #include \"sfm.hpp\" MyI2c i2c; // inherits sfm::I2cInterface&lt;MyI2c&gt; sfm::Driver&lt;MyI2c&gt; dev(i2c, sfm::addr::kSfm4300Default); auto id = dev.ReadProductIdentifier(); // → Variant (idle mode) auto ok = dev.StartContinuous(sfm::Gas::CO2);// UnsupportedGas on a 50 slm part auto m = dev.ReadMeasurement(); // m.value.flow [slm], temperature_c, status . | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/#quick-start",
+    
+    "relUrl": "/#quick-start"
+  },"7": {
+    "doc": "HardFOC SFM Flow Meter Driver",
+    "title": "Documentation",
+    "content": ". | Installation · Quick start · I²C protocol · Hardware setup · CMake integration · API reference · Examples · Troubleshooting · Datasheets | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/#documentation",
+    
+    "relUrl": "/#documentation"
+  },"8": {
+    "doc": "HardFOC SFM Flow Meter Driver",
+    "title": "Examples",
+    "content": "examples/esp32/ — sfm_minimal_example (identifier + 1 Hz frame) and sfm_flow_demo (500 Hz poll, fixed-N averaging, variant-aware gas). Build with ./scripts/build_app.sh &lt;app&gt; Debug after git submodule update --init --recursive. ",
+    "url": "/hf-sfm-flow-meter-driver/development/#examples",
+    
+    "relUrl": "/#examples"
+  },"9": {
+    "doc": "HardFOC SFM Flow Meter Driver",
+    "title": "Official references",
+    "content": ". | Sensirion SFM4300 data sheet (§4 I²C command set, §4.5 scaling) | Sensirion/embedded-i2c-sfm-sf06 reference driver (BSD-3) — see THIRD_PARTY_NOTICES.md | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/#official-references",
+    
+    "relUrl": "/#official-references"
+  },"10": {
+    "doc": "HardFOC SFM Flow Meter Driver",
+    "title": "License",
+    "content": "MIT — see LICENSE. Protocol constants cross-checked against Sensirion’s BSD-3 reference implementation; notice reproduced in THIRD_PARTY_NOTICES.md. ",
+    "url": "/hf-sfm-flow-meter-driver/development/#license",
+    
+    "relUrl": "/#license"
+  },"11": {
+    "doc": "HardFOC SFM Flow Meter Driver",
+    "title": "HardFOC SFM Flow Meter Driver",
+    "content": " ",
+    "url": "/hf-sfm-flow-meter-driver/development/",
+    
+    "relUrl": "/"
+  },"12": {
+    "doc": "API reference",
+    "title": "API reference",
+    "content": "Authoritative declarations live under inc/. Run Doxygen (doxygen _config/Doxyfile) for HTML cross-links. ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/api-reference/",
+    
+    "relUrl": "/docs/api-reference/"
+  },"13": {
+    "doc": "API reference",
+    "title": "Transport — sfm::I2cInterface&lt;Derived&gt;",
+    "content": "CRTP base. Implement: . | bool Write(uint8_t addr7, const uint8_t* data, size_t len); | bool Read(uint8_t addr7, uint8_t* out, size_t len); — false on NACK | void DelayMs(uint32_t ms); | bool EnsureInitialized(); | Optional bool WriteGeneralCallImpl(uint8_t byte); | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/api-reference/#transport--sfmi2cinterfacederived",
+    
+    "relUrl": "/docs/api-reference/#transport--sfmi2cinterfacederived"
+  },"14": {
+    "doc": "API reference",
+    "title": "Driver — sfm::Driver&lt;I2cT&gt;",
+    "content": "| Method | Description | . | Driver(i2c, address = 0x2A) | bind transport + 7-bit address | . | ReadProductIdentifier() | 0xE102 → ProductInfo (id, serial, Variant); idle only | . | AssumeVariant(v) / KnownVariant() | set / query the variant used for gas gating | . | ReadScaleOffsetUnit(gas) | 0x3661 → Scaling | . | StartContinuous(gas, o2_permille = 0) | reads scaling, gates on variant, starts, waits 12 ms | . | Stop() | 0x3FF9 | . | ReadMeasurement() | 3 words → Measurement (flow, °C, StatusWord) | . | ReadFlowOnly() | 1 word → flow | . | ConfigureAveraging(n) | 0x366A, 0 = average-until-read, 1…128 fixed-N | . | UpdateConcentration(o2_permille) | set + activate | . | EnterSleep() / ExitSleep() | §4.3.8 | . | SoftReset() | general call 0x06; NotSupported without general-call transport | . | ActiveGas() / ActiveScaling() / Measuring() | session state | . | EncodeWord() / DecodeWords() | static framing helpers (also used by tests) | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/api-reference/#driver--sfmdriveri2ct",
+    
+    "relUrl": "/docs/api-reference/#driver--sfmdriveri2ct"
+  },"15": {
+    "doc": "API reference",
+    "title": "Types (sfm_types.hpp)",
+    "content": ". | Gas — O2, Air, N2O, CO2, AirO2Mix, N2OO2Mix, CO2O2Mix; StartCommandFor(g), IsMixture(g) | Variant — decoded from the product identifier; FullScaleSlm(v), SupportsGas(v, g) | Scaling — scale, offset, unit, ToFlow(raw) | StatusWord — command_nibble(), exponential_smoothing(), fixed_n_averaging(), gas_fraction_permille(), pure_gas() | Measurement — raw + engineering values | DriverResult&lt;T&gt; / DriverError — None, InvalidParameter, NotInitialized, BusWrite, BusRead, NoData, Crc, UnsupportedGas, NotSupported, UnexpectedUnit | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/api-reference/#types-sfm_typeshpp",
+    
+    "relUrl": "/docs/api-reference/#types-sfm_typeshpp"
+  },"16": {
+    "doc": "API reference",
+    "title": "Constants (sfm_commands.hpp)",
+    "content": "addr::*, cmd::*, timing::*, kFlowUnitSlm20C = 0x0148, kTemperatureScalePerC = 200, Crc8(), Crc8Word(). Next: Examples → . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/api-reference/#constants-sfm_commandshpp",
+    
+    "relUrl": "/docs/api-reference/#constants-sfm_commandshpp"
+  },"17": {
+    "doc": "CMake integration",
+    "title": "CMake integration",
+    "content": " ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/cmake-integration/",
+    
+    "relUrl": "/docs/cmake-integration/"
+  },"18": {
+    "doc": "CMake integration",
+    "title": "Standalone consumer",
+    "content": "| 1 2 . | add_subdirectory(path/to/hf-sfm-flow-meter-driver) target_link_libraries(app PRIVATE hf::sfm) . | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/cmake-integration/#standalone-consumer",
+    
+    "relUrl": "/docs/cmake-integration/#standalone-consumer"
+  },"19": {
+    "doc": "CMake integration",
+    "title": "Settings file only",
+    "content": "cmake/hf_sfm_build_settings.cmake is include_guarded and sets: . | Variable | Purpose | . | HF_SFM_TARGET_NAME | hf_sfm | . | HF_SFM_VERSION* | semantic version → generated sfm_version.h | . | HF_SFM_PUBLIC_INCLUDE_DIRS | inc/ + generated header dir | . | HF_SFM_SOURCE_FILES | empty (header-only) | . | HF_SFM_IDF_REQUIRES | driver (ESP-IDF component wrapper) | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/cmake-integration/#settings-file-only",
+    
+    "relUrl": "/docs/cmake-integration/#settings-file-only"
+  },"20": {
+    "doc": "CMake integration",
+    "title": "Options",
+    "content": "| Option | Default | Effect | . | HF_SFM_ENABLE_WARNINGS | OFF | -Wall -Wextra -Wpedantic on consumers | . | HF_SFM_BUILD_TESTS | OFF | builds tests/host and registers with CTest | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/cmake-integration/#options",
+    
+    "relUrl": "/docs/cmake-integration/#options"
+  },"21": {
+    "doc": "CMake integration",
+    "title": "ESP-IDF",
+    "content": "examples/esp32/components/hf_sfm/CMakeLists.txt wraps the settings file as an IDF component; add the component directory to EXTRA_COMPONENT_DIRS. Next: API reference → . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/cmake-integration/#esp-idf",
+    
+    "relUrl": "/docs/cmake-integration/#esp-idf"
+  },"22": {
+    "doc": "Examples",
+    "title": "Examples",
+    "content": " ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/examples/",
+    
+    "relUrl": "/docs/examples/"
+  },"23": {
+    "doc": "Examples",
+    "title": "ESP32-S3 (examples/esp32)",
+    "content": "| App | Role | . | sfm_minimal_example | reset, product identifier, Air table, 1 Hz frame | . | sfm_flow_demo | 500 Hz poll, fixed-N=4 averaging, CO2 table when available, per-second statistics | . | 1 2 3 4 . | cd examples/esp32 git submodule update --init --recursive ./scripts/build_app.sh sfm_minimal_example Debug ./scripts/flash_app.sh sfm_minimal_example Debug . | . Wiring and address details: Hardware setup and examples/esp32/README.md. ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/examples/#esp32-s3-examplesesp32",
+    
+    "relUrl": "/docs/examples/#esp32-s3-examplesesp32"
+  },"24": {
+    "doc": "Examples",
+    "title": "Transport adapter",
+    "content": "examples/esp32/main/include/hf_sfm_esp_i2c.hpp — SfmEspIdfI2c&lt;port, sda, scl, hz&gt; implements the four CRTP calls plus WriteGeneralCallImpl with the legacy ESP-IDF driver/i2c.h API. Next: Troubleshooting → . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/examples/#transport-adapter",
+    
+    "relUrl": "/docs/examples/#transport-adapter"
+  },"25": {
+    "doc": "Hardware setup",
+    "title": "Hardware setup",
+    "content": " ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/hardware-setup/",
+    
+    "relUrl": "/docs/hardware-setup/"
+  },"26": {
+    "doc": "Hardware setup",
+    "title": "Electrical",
+    "content": ". | Supply 3.0–5.5 V (SFM4300); I²C lines at the supply level. | I²C 400 kHz standard, up to 1 MHz Fm+; external pull-ups required. | IRQn (open-drain, active-low) pulses at 2 kHz / N when a new average is ready; optional. | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/hardware-setup/#electrical",
+    
+    "relUrl": "/docs/hardware-setup/#electrical"
+  },"27": {
+    "doc": "Hardware setup",
+    "title": "Address (SFM4300 ADDR pin)",
+    "content": "| ADDR | 7-bit address | . | GND or floating | 0x2A | . | GND via 1.2 kΩ | 0x2B | . | GND via 2.7 kΩ | 0x2C | . | GND via 5.6 kΩ | 0x2D | . Other SF06 parts: SFM3119 0x29, SFM3003 0x28, SFM3013 0x2F, SFM3019 0x2E. ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/hardware-setup/#address-sfm4300-addr-pin",
+    
+    "relUrl": "/docs/hardware-setup/#address-sfm4300-addr-pin"
+  },"28": {
+    "doc": "Hardware setup",
+    "title": "Fittings (SFM4300)",
+    "content": "| Suffix | Connection | . | -B | basemount — base plate with 7 mm inner-diameter ports, O-ring sealed; fix with the side screw holes only | . | -O | O-rings | . | -P | 8 mm Legris push-in fittings (8 mm OD tube) | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/hardware-setup/#fittings-sfm4300",
+    
+    "relUrl": "/docs/hardware-setup/#fittings-sfm4300"
+  },"29": {
+    "doc": "Hardware setup",
+    "title": "Gas tables by variant",
+    "content": "| Variant | Range | Calibrated tables | . | SFM4300-20-x | 0–20 slm | O2, Air, N2O, CO2, Air/O2, N2O/O2, CO2/O2 | . | SFM4300-50-x | 0–50 slm | O2, Air, Air/O2 only | . The driver enforces this once the variant is known (ReadProductIdentifier() or AssumeVariant()): StartContinuous(Gas::CO2) on a 50 slm part returns DriverError::UnsupportedGas. Running a thermal flow sensor with the wrong gas table yields large systematic errors — do not paper over this in the application. ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/hardware-setup/#gas-tables-by-variant",
+    
+    "relUrl": "/docs/hardware-setup/#gas-tables-by-variant"
+  },"30": {
+    "doc": "Hardware setup",
+    "title": "Pressure and orientation",
+    "content": "Rated to 6 bar (line pressure), pressure drop &lt; 25 mbar at 20 slm (-20) and &lt; 100 mbar at 50 slm (-50). Keep straight tube length upstream per the data sheet for the stated accuracy. Next: CMake integration → . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/hardware-setup/#pressure-and-orientation",
+    
+    "relUrl": "/docs/hardware-setup/#pressure-and-orientation"
+  },"31": {
+    "doc": "I²C protocol",
+    "title": "I²C protocol (SF06 command set)",
+    "content": "Source: SFM4300 data sheet §4. All values in inc/sfm_commands.hpp. ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/i2c-protocol/#ic-protocol-sf06-command-set",
+    
+    "relUrl": "/docs/i2c-protocol/#ic-protocol-sf06-command-set"
+  },"32": {
+    "doc": "I²C protocol",
+    "title": "Framing",
+    "content": ". | Commands are 16-bit, big-endian, written without a register byte. | Optional 16-bit argument follows the command and carries a CRC-8. | Reads return 16-bit words, each followed by CRC-8; the driver verifies every word (DriverError::Crc on mismatch). | CRC-8: polynomial 0x31, init 0xFF, no reflection, no final XOR. Test vector 0xBEEF → 0x92. | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/i2c-protocol/#framing",
+    
+    "relUrl": "/docs/i2c-protocol/#framing"
+  },"33": {
+    "doc": "I²C protocol",
+    "title": "Commands",
+    "content": "| Command | Code | Argument | Notes | . | Start O2 | 0x3603 | — | Gas 0 | . | Start Air | 0x3608 | — | Gas 1 | . | Start N2O | 0x3615 | — | Gas 2 (SFM4300-20 only) | . | Start CO2 | 0x361E | — | Gas 3 (SFM4300-20 only) | . | Start Air/O2 | 0x3632 | O2 ‰ | mixture 0 | . | Start N2O/O2 | 0x3639 | O2 ‰ | mixture 1 (SFM4300-20 only) | . | Start CO2/O2 | 0x3646 | O2 ‰ | mixture 2 (SFM4300-20 only) | . | Update concentration (set) | 0xE17D | O2 ‰ | then activate | . | Update concentration (activate) | 0xE000 | — |   | . | Stop continuous | 0x3FF9 | — | → idle | . | Configure averaging | 0x366A | N | 0 = average-until-read, 1…128 fixed-N | . | Read scale / offset / unit | 0x3661 | start code | 3 words back | . | Enter sleep | 0x3677 | — | idle only | . | Exit sleep | any write header | — | not ACKed; poll ≤ 16 ms | . | Read product identifier | 0xE102 | — | 6 words: id(2) + serial(4); idle only | . | Soft reset | 0x06 to 0x00 | — | general call, ~16–20 ms | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/i2c-protocol/#commands",
+    
+    "relUrl": "/docs/i2c-protocol/#commands"
+  },"34": {
+    "doc": "I²C protocol",
+    "title": "Measurement frame (after a start command)",
+    "content": "| 1 . | Flow MSB, Flow LSB, CRC, Temp MSB, Temp LSB, CRC, Status MSB, Status LSB, CRC . | . The read may stop after any word (flow-only read = 3 bytes). A read header while no fresh sample exists is NACKed (DriverError::NoData). ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/i2c-protocol/#measurement-frame-after-a-start-command",
+    
+    "relUrl": "/docs/i2c-protocol/#measurement-frame-after-a-start-command"
+  },"35": {
+    "doc": "I²C protocol",
+    "title": "Scaling (§4.5)",
+    "content": "flow = (raw − offset) / scale, temperature_c = raw / 200. SFM4300: scale 1000 per slm, offset −28672, unit code 0x0148 (slm at 20 °C, 1013.25 mbar). The driver reads them from the device per gas so other SF06 parts work unchanged. ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/i2c-protocol/#scaling-45",
+    
+    "relUrl": "/docs/i2c-protocol/#scaling-45"
+  },"36": {
+    "doc": "I²C protocol",
+    "title": "Status word (§4.3.2)",
+    "content": "| Bits | Meaning | . | 15:12 | running command (0 O2, 1 Air, 2 N2O, 3 CO2, 4 Air/O2, 5 N2O/O2, 6 CO2/O2) | . | 11 | exponential smoothing active (average-until-read idle &gt; 64 ms) | . | 10 | fixed-N averaging active | . | 9:0 | O2 fraction (‰) for mixtures, 0x3FF for a pure gas | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/i2c-protocol/#status-word-432",
+    
+    "relUrl": "/docs/i2c-protocol/#status-word-432"
+  },"37": {
+    "doc": "I²C protocol",
+    "title": "Timing",
+    "content": "| Event | Time | . | First result after start | 12 ms (accuracy settles by 30 ms) | . | Internal sample period | ~0.5 ms (2 kHz) | . | Soft reset | 16 ms typ., 20 ms max | . | Warm-up after reset / wake | 30 ms | . Next: Hardware setup → . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/i2c-protocol/#timing",
+    
+    "relUrl": "/docs/i2c-protocol/#timing"
+  },"38": {
+    "doc": "I²C protocol",
+    "title": "I²C protocol",
+    "content": " ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/i2c-protocol/",
+    
+    "relUrl": "/docs/i2c-protocol/"
+  },"39": {
+    "doc": "Documentation",
+    "title": "HF-SFM driver documentation",
+    "content": "This site mirrors the docs/ folder in the repository and documents the Sensirion SF06 I²C command set (SFM4300 data sheet §4) as implemented by this header-only driver. The same command set is shared by SFM3003, SFM3013, SFM3019 and SFM3119. Browse on GitHub: repository home · Issues . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/#hf-sfm-driver-documentation",
+    
+    "relUrl": "/docs/#hf-sfm-driver-documentation"
+  },"40": {
+    "doc": "Documentation",
+    "title": "Documentation structure",
+    "content": " ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/#documentation-structure",
+    
+    "relUrl": "/docs/#documentation-structure"
+  },"41": {
+    "doc": "Documentation",
+    "title": "Getting started",
+    "content": ". | Installation — Toolchain, CMake, submodule layout | Quick start — Minimal CRTP I²C adapter and first flow frame | I²C protocol — Commands, framing, CRC-8, scale/offset, status word | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/#getting-started",
+    
+    "relUrl": "/docs/#getting-started"
+  },"42": {
+    "doc": "Documentation",
+    "title": "Hardware and integration",
+    "content": ". | Hardware setup — Address strapping, pull-ups, supply, fittings, gas tables per variant | CMake integration — hf_sfm_build_settings.cmake, hf::sfm | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/#hardware-and-integration",
+    
+    "relUrl": "/docs/#hardware-and-integration"
+  },"43": {
+    "doc": "Documentation",
+    "title": "Reference and examples",
+    "content": ". | API reference — Driver&lt;I2cT&gt;, types, results, status decode | Examples — ESP32-S3 build_app.sh workflow | Troubleshooting — NACKs, CRC errors, unsupported gas, averaging | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/#reference-and-examples",
+    
+    "relUrl": "/docs/#reference-and-examples"
+  },"44": {
+    "doc": "Documentation",
+    "title": "Manufacturer",
+    "content": ". | Datasheet and links — Bundled PDF and Sensirion references | . Back: Repository README → . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/#manufacturer",
+    
+    "relUrl": "/docs/#manufacturer"
+  },"45": {
+    "doc": "Documentation",
+    "title": "Documentation",
+    "content": " ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/",
+    
+    "relUrl": "/docs/"
+  },"46": {
+    "doc": "Installation",
+    "title": "Installation",
+    "content": "The driver is header-only. CMake generates sfm_version.h and exposes an INTERFACE target hf::sfm for consumers. ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/installation/",
+    
+    "relUrl": "/docs/installation/"
+  },"47": {
+    "doc": "Installation",
+    "title": "Requirements",
+    "content": ". | C++17 compiler (GCC 9+, Clang 10+, ESP-IDF toolchains) | CMake 3.16+ | An I²C master that can do raw writes/reads to a 7-bit address (no register byte) — see Quick start | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/installation/#requirements",
+    
+    "relUrl": "/docs/installation/#requirements"
+  },"48": {
+    "doc": "Installation",
+    "title": "As a git submodule",
+    "content": "| 1 2 . | git submodule add https://github.com/hardfoc/hf-sfm-flow-meter-driver.git external/hf-sfm-flow-meter-driver git submodule update --init --recursive . | . Then in your CMakeLists.txt: . | 1 2 . | add_subdirectory(external/hf-sfm-flow-meter-driver) target_link_libraries(my_firmware PRIVATE hf::sfm) . | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/installation/#as-a-git-submodule",
+    
+    "relUrl": "/docs/installation/#as-a-git-submodule"
+  },"49": {
+    "doc": "Installation",
+    "title": "Without add_subdirectory",
+    "content": "| 1 2 . | include(external/hf-sfm-flow-meter-driver/cmake/hf_sfm_build_settings.cmake) target_include_directories(my_firmware PRIVATE ${HF_SFM_PUBLIC_INCLUDE_DIRS}) . | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/installation/#without-add_subdirectory",
+    
+    "relUrl": "/docs/installation/#without-add_subdirectory"
+  },"50": {
+    "doc": "Installation",
+    "title": "Host tests",
+    "content": "| 1 2 . | cmake -S . -B build -DHF_SFM_BUILD_TESTS=ON cmake --build build &amp;&amp; ctest --test-dir build . | . The tests use a fake I²C adapter and replay data-sheet frames (CRC-8 vector 0xBEEF → 0x92, product identifier, scaling, gas gating). ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/installation/#host-tests",
+    
+    "relUrl": "/docs/installation/#host-tests"
+  },"51": {
+    "doc": "Installation",
+    "title": "Repository layout",
+    "content": "| 1 2 3 4 5 6 7 . | inc/ sfm.hpp (umbrella), sfm_driver.hpp, sfm_types.hpp, sfm_commands.hpp, sfm_i2c_interface.hpp, sfm_version.h.in cmake/ build settings + package config template docs/ this documentation examples/ ESP-IDF (ESP32-S3) examples + scripts submodule tests/host/ hardware-free unit tests _config/ Doxygen, Jekyll, lint configuration . | . Next: Quick start → . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/installation/#repository-layout",
+    
+    "relUrl": "/docs/installation/#repository-layout"
+  },"52": {
+    "doc": "Quick start",
+    "title": "Quick start",
+    "content": "You supply a CRTP adapter that inherits sfm::I2cInterface&lt;YourType&gt; and implements four calls: Write, Read, DelayMs, EnsureInitialized. Optional WriteGeneralCallImpl enables SoftReset() (0x06 to address 0x00). | 1 2 3 4 5 6 7 8 9 10 . | #include \"sfm.hpp\" class MyI2c : public sfm::I2cInterface&lt;MyI2c&gt; { public: bool Write(uint8_t addr7, const uint8_t* data, size_t len) noexcept { /* START addr+W data STOP */ } bool Read(uint8_t addr7, uint8_t* out, size_t len) noexcept { /* START addr+R read STOP; false on NACK */ } void DelayMs(uint32_t ms) noexcept { /* RTOS / busy delay */ } bool EnsureInitialized() noexcept { return true; } bool WriteGeneralCallImpl(uint8_t b) noexcept { /* optional */ } }; . | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/quickstart/",
+    
+    "relUrl": "/docs/quickstart/"
+  },"53": {
+    "doc": "Quick start",
+    "title": "First frame",
+    "content": "| 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 . | MyI2c i2c; sfm::Driver&lt;MyI2c&gt; dev(i2c, sfm::addr::kSfm4300Default); // 0x2A dev.SoftReset(); // optional, ~20 ms auto id = dev.ReadProductIdentifier(); // idle mode only // id.value.variant → Sfm4300_20_P / Sfm4300_50_P / … auto st = dev.StartContinuous(sfm::Gas::CO2); // reads scale/offset first if (!st.ok()) { /* UnsupportedGas on SFM4300-50-x → fall back to Gas::Air */ } dev.ConfigureAveraging(0); // average-until-read (default) auto m = dev.ReadMeasurement(); // ≥ 0.5 ms after the last read if (m.ok()) { float slm = m.value.flow; // (raw − offset) / scale float tc = m.value.temperature_c; // raw / 200 bool pure = m.value.status.pure_gas(); } . | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/quickstart/#first-frame",
+    
+    "relUrl": "/docs/quickstart/#first-frame"
+  },"54": {
+    "doc": "Quick start",
+    "title": "Polling model",
+    "content": "The sensor measures every ~0.5 ms. With average-until-read (N = 0) each read returns the mean of all samples since the previous read, so a 500 Hz poll is anti-aliased for free. With fixed-N averaging, a read before a new average is ready is NACKed → DriverError::NoData; treat it as “no update”, not a fault. ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/quickstart/#polling-model",
+    
+    "relUrl": "/docs/quickstart/#polling-model"
+  },"55": {
+    "doc": "Quick start",
+    "title": "Result handling",
+    "content": "Every call returns sfm::DriverResult&lt;T&gt;: check .ok() / .error. ToString(error) gives a stable string for logs. Next: I²C protocol → . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/quickstart/#result-handling",
+    
+    "relUrl": "/docs/quickstart/#result-handling"
+  },"56": {
+    "doc": "Troubleshooting",
+    "title": "Troubleshooting",
+    "content": " ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/troubleshooting/",
+    
+    "relUrl": "/docs/troubleshooting/"
+  },"57": {
+    "doc": "Troubleshooting",
+    "title": "NoData on every read",
+    "content": ". | No start command was issued, or Stop() was sent — the sensor NACKs reads in idle. | Fixed-N averaging with a poll faster than N × 0.5 ms — expected; skip the tick. | Wrong address: check the ADDR strap table in Hardware setup. | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/troubleshooting/#nodata-on-every-read",
+    
+    "relUrl": "/docs/troubleshooting/#nodata-on-every-read"
+  },"58": {
+    "doc": "Troubleshooting",
+    "title": "Crc errors",
+    "content": ". | Bus noise or missing pull-ups; reduce to 100–400 kHz and check rise times. | Reading fewer than 3 bytes per word boundary on a custom transport. | . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/troubleshooting/#crc-errors",
+    
+    "relUrl": "/docs/troubleshooting/#crc-errors"
+  },"59": {
+    "doc": "Troubleshooting",
+    "title": "UnsupportedGas",
+    "content": "The known variant does not carry that lookup table (e.g. CO2 on SFM4300-50-x). Use Gas::Air / Gas::O2 or fit the 20 slm part. Do not bypass with AssumeVariant(Variant::Unknown) in production — the reading would be systematically wrong. ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/troubleshooting/#unsupportedgas",
+    
+    "relUrl": "/docs/troubleshooting/#unsupportedgas"
+  },"60": {
+    "doc": "Troubleshooting",
+    "title": "BusWrite on ReadProductIdentifier()",
+    "content": "The command is idle-only. Call Stop() first, or read the identifier before StartContinuous(). ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/troubleshooting/#buswrite-on-readproductidentifier",
+    
+    "relUrl": "/docs/troubleshooting/#buswrite-on-readproductidentifier"
+  },"61": {
+    "doc": "Troubleshooting",
+    "title": "NotSupported from SoftReset()",
+    "content": "Your transport lacks WriteGeneralCallImpl (general-call address 0x00). Either implement it or power-cycle the sensor. ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/troubleshooting/#notsupported-from-softreset",
+    
+    "relUrl": "/docs/troubleshooting/#notsupported-from-softreset"
+  },"62": {
+    "doc": "Troubleshooting",
+    "title": "First readings a few % off",
+    "content": "Data sheet: accuracy settles ~30 ms after start; discard the first frames. Back: Documentation home → . ",
+    "url": "/hf-sfm-flow-meter-driver/development/docs/troubleshooting/#first-readings-a-few--off",
+    
+    "relUrl": "/docs/troubleshooting/#first-readings-a-few--off"
+  },"63": {
+    "doc": "Third-party notices",
+    "title": "Third-party notices",
+    "content": "# Third-party notices This driver is an independent C++17 implementation of the Sensirion SF06 I²C command set. Command codes, framing, CRC-8 parameters, timing constants and scale/offset semantics were taken from the public **SFM4300 data sheet** and cross-checked against Sensirion's reference implementation [`Sensirion/embedded-i2c-sfm-sf06`](https://github.com/Sensirion/embedded-i2c-sfm-sf06) (generated by `sensirion-driver-generator`, model version 1.5.0), which is distributed under the BSD 3-Clause license reproduced below. No Sensirion source files are included verbatim. ``` Copyright (c) 2024, Sensirion AG All rights reserved. Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. * Neither the name of Sensirion AG nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ``` ",
+    "url": "/hf-sfm-flow-meter-driver/development/THIRD_PARTY_NOTICES.html",
+    
+    "relUrl": "/THIRD_PARTY_NOTICES.html"
+  },"64": {
+    "doc": "ESP32 examples — HF-SFM (Sensirion SFM4300 / SF06 family)",
+    "title": "ESP32 examples — HF-SFM (Sensirion SFM4300 / SF06 family)",
+    "content": "# ESP32 examples — HF-SFM (Sensirion SFM4300 / SF06 family) ESP-IDF examples for the **SF06 I2C command set** (SFM4300 data sheet §4). Default address **0x2A** (ADDR pin to GND or floating), **400 kHz** I2C. ## Prerequisites - ESP-IDF **v5.4+** (CI uses `release/v5.5`) - Python 3 with PyYAML (for `scripts/generate_matrix.py`) ## One-time setup From `examples/esp32/`: ```bash git submodule update --init --recursive ``` This pulls `scripts/` (**hf-espidf-project-tools**): `build_app.sh`, `flash_app.sh`, and `generate_matrix.py` (same layout as other `hf-*-driver` submodules). ## Default wiring (ESP32-S3) | MCU signal | GPIO (default) | Sensor |------------|----------------|--------| SDA | **8** | SDA | SCL | **9** | SCL | 3V3 / 5V | VDD | 3.0–5.5 V per data sheet | GND | GND | GND | External pull-ups (2.2–4.7 kΩ) are required; the ESP32 internal pull-ups are only a bench convenience. Change the `using I2c = SfmEspIdfI2c` alias in each `.cpp` to move pins or speed. ## Apps (`app_config.yml`) | App | Role |-----|------| `sfm_minimal_example` | Reset, product identifier, Air table, 1 Hz frame | `sfm_flow_demo` | 500 Hz poll, fixed-N=4 averaging, CO2 table when available, 1 s statistics | ```bash ./scripts/build_app.sh list ./scripts/build_app.sh sfm_minimal_example Debug ./scripts/flash_app.sh sfm_minimal_example Debug ``` ## Gas tables by variant `SFM4300-20-x` carries O2, Air, N2O, CO2 and the three binary mixtures. `SFM4300-50-x` carries **O2, Air and Air/O2 only** — `StartContinuous(Gas::CO2)` returns `UnsupportedGas` once the variant is known from the product identifier. ",
+    "url": "/hf-sfm-flow-meter-driver/development/examples/esp32/",
+    
+    "relUrl": "/examples/esp32/"
+  }
+}
