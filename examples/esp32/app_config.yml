@@ -11,7 +11,7 @@ metadata:
 
 apps:
   sfm_minimal_example:
-    description: "SFM4300 §4: soft reset, product identifier, Air table, 1 Hz frame — I2C0 SDA=GPIO8 SCL=GPIO9 @400k"
+    description: "Soft reset, product identifier, air table, one flow / temperature / status frame per second"
     source_file: "sfm_minimal_example.cpp"
     category: "example"
     idf_versions: ["release/v5.5"]
@@ -24,7 +24,7 @@ apps:
       - "Decode flow / temperature / status word with CRC-8 checks"
 
   sfm_flow_demo:
-    description: "500 Hz poll with fixed-N=4 averaging; CO2 table when the variant has it, else Air; 1 s statistics"
+    description: "500 Hz poll with fixed-N averaging, CO2 table when the variant has it, else air; 1 s statistics"
     source_file: "sfm_flow_demo.cpp"
     category: "example"
     idf_versions: ["release/v5.5"]

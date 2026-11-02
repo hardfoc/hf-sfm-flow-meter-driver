@@ -1,0 +1,14 @@
+{
+  "driver-layers": {
+    "title": "Three layers, one of them yours",
+    "alt": "Layer diagram: the application calls the hardware-agnostic sfm::Driver and its commands, which use the CRTP I2C interface, which calls the platform port you write, which drives the I2C bus of the Sensirion SFM4300 or another SF06-family flow meter.",
+    "description": "From top to bottom. Your application talks to one sfm::Driver<I2c> object per sensor, whose public commands are listed from inc/sfm_driver.hpp. The core turns each call into 16-bit SF06 commands, checks the CRC-8 of every word it reads and converts raw counts with the scaling the sensor reported. The communication interface (sfm::I2cInterface in inc/sfm_i2c_interface.hpp) is a CRTP base: four methods are required, general call is optional. The platform port is the only code you write. Below it is the sensor.",
+    "profile": "overview",
+    "width": 1200,
+    "source": "docs/diagrams/figures/driver-layers.py",
+    "sources": [
+      "inc/sfm_driver.hpp:Driver public commands",
+      "inc/sfm_i2c_interface.hpp:I2cInterface"
+    ]
+  }
+}
