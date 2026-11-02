@@ -28,10 +28,10 @@ if(HF_SFM_ENABLE_WARNINGS)
       INTERFACE -Wall -Wextra -Wpedantic)
 endif()
 
-option(HF_SFM_BUILD_TESTS "Build host unit tests (no hardware)" OFF)
+option(HF_SFM_BUILD_TESTS "Build the host unit tests in tests/ (no hardware)" OFF)
 if(HF_SFM_BUILD_TESTS)
   enable_testing()
-  add_subdirectory(tests/host)
+  add_subdirectory(tests)
 endif()
 
 include(CMakePackageConfigHelpers)
