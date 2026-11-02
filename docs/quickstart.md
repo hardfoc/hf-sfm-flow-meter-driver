@@ -1,55 +1,74 @@
-# Quick start
+# Quickstart
 
-You supply a **CRTP** adapter that inherits `sfm::I2cInterface<YourType>` and
-implements four calls: `Write`, `Read`, `DelayMs`, `EnsureInitialized`.
-Optional `WriteGeneralCallImpl` enables `SoftReset()` (0x06 to address 0x00).
+Read a gas flow from your MCU: wire four signals, write a small port class, call three driver functions.
 
-```cpp
-#include "sfm.hpp"
+## 1. Wire it
 
-class MyI2c : public sfm::I2cInterface<MyI2c> {
-public:
-    bool Write(uint8_t addr7, const uint8_t* data, size_t len) noexcept { /* START addr+W data STOP */ }
-    bool Read(uint8_t addr7, uint8_t* out, size_t len) noexcept        { /* START addr+R read STOP; false on NACK */ }
-    void DelayMs(uint32_t ms) noexcept                                  { /* RTOS / busy delay */ }
-    bool EnsureInitialized() noexcept                                   { return true; }
-    bool WriteGeneralCallImpl(uint8_t b) noexcept                       { /* optional */ }
-};
+The SFM4300 has a 6-pin JST NSH connector (1.0 mm pitch).
+
+| MCU | SFM4300 pin | Notes |
+| --- | --- | --- |
+| I2C SDA | 2 (SDA) | Pull-up to the MCU's I/O voltage (2.2 kΩ to 4.7 kΩ is typical) |
+| I2C SCL | 5 (SCL) | Pull-up as SDA; 400 kHz is the typical clock, 1 MHz the maximum |
+| 3.3 V | 4 (VDD) | 3.0 V to 5.5 V; the sensor is calibrated at 3.3 V |
+| GND | 3 (GND) | Common ground |
+| (none) | 1 (ADDR) | Leave open or tie to GND for address 0x2A; never tie it to VDD |
+| GPIO in (optional) | 6 (IRQn) | Low when a sample is ready; leave it unconnected if unused |
+
+The [Hardware](hardware.md) page has the other addresses, the electrical limits and the timing.
+
+## 2. Add the driver
+
+Add the repository as a submodule and link the `hf::sfm` CMake target (or add `inc/` to your include path and
+build with C++17). [Installation](installation.md) covers CMake and ESP-IDF.
+
+```bash
+git submodule add https://github.com/hardfoc/hf-sfm-flow-meter-driver.git external/hf-sfm-flow-meter-driver
 ```
 
-## First frame
+## 3. Write the port
 
-```cpp
-MyI2c i2c;
-sfm::Driver<MyI2c> dev(i2c, sfm::addr::kSfm4300Default);   // 0x2A
+The port is the only platform code. It writes and reads raw bytes to a 7-bit address and waits. Replace the
+`platform_*` calls with your SDK's.
 
-dev.SoftReset();                                            // optional, ~20 ms
-auto id = dev.ReadProductIdentifier();                      // idle mode only
-// id.value.variant → Sfm4300_20_P / Sfm4300_50_P / …
-
-auto st = dev.StartContinuous(sfm::Gas::CO2);               // reads scale/offset first
-if (!st.ok()) { /* UnsupportedGas on SFM4300-50-x → fall back to Gas::Air */ }
-
-dev.ConfigureAveraging(0);                                  // average-until-read (default)
-
-auto m = dev.ReadMeasurement();                             // ≥ 0.5 ms after the last read
-if (m.ok()) {
-    float slm = m.value.flow;                               // (raw − offset) / scale
-    float tc  = m.value.temperature_c;                      // raw / 200
-    bool pure = m.value.status.pure_gas();
-}
+```cpp title="my_i2c.hpp"
+--8<-- "tests/docs/my_i2c.hpp:port"
 ```
 
-## Polling model
+`Read()` must return `false` when the sensor NACKs its address: that is how the SFM4300 says "no new sample
+yet". [Porting](porting.md) explains each method.
 
-The sensor measures every ~0.5 ms. With average-until-read (N = 0) each read
-returns the mean of all samples since the previous read, so a 500 Hz poll is
-anti-aliased for free. With fixed-N averaging, a read before a new average is
-ready is NACKed → `DriverError::NoData`; treat it as "no update", not a fault.
+## 4. Read a flow
 
-## Result handling
+```cpp title="main.cpp"
+--8<-- "tests/docs/quickstart.cpp:quickstart"
+```
 
-Every call returns `sfm::DriverResult<T>`: check `.ok()` / `.error`.
-`ToString(error)` gives a stable string for logs.
+What each step does:
 
-**Next:** [I²C protocol →](i2c_protocol.md)
+1. `ReadProductIdentifier()` reads the 32-bit product number and serial number and decodes the variant
+   (for example SFM4300-20-P). The sensor answers it only in idle mode, so call it before starting.
+2. `StartContinuous()` reads the scale factor, offset and unit for the gas, sends the start command and waits
+   the 12 ms until the first result is ready.
+3. `ReadMeasurement()` reads one 9-byte frame (flow, temperature, status), checks three CRCs and converts the flow
+   to standard litres per minute (slm, at 20 °C and 1013.25 mbar).
+
+Results are accurate after about 30 ms of measuring: discard the first readings. Poll at any rate up to 2 kHz; in
+the default averaging mode each read returns the mean of the samples since the previous read.
+
+This example is built by the host CI, so it compiles against the current headers.
+
+## If it does not work
+
+| Symptom | First thing to check |
+| --- | --- |
+| `ReadProductIdentifier()` returns `NoData` or `BusWrite` | Pull-ups, the address (ADDR strap), SDA and SCL swapped, the sensor powered |
+| It fails only after a start | The sensor takes commands only in idle mode: call `Stop()` first |
+| `ReadMeasurement()` always returns `NoData` | No start command was sent, or the poll is faster than the sample rate |
+| Occasional `Crc` errors | Weak pull-ups or long wires; lower the clock to 100 kHz ([Troubleshooting](troubleshooting.md)) |
+
+## Next
+
+- [API guide](api-guide.md): gases and mixtures, averaging, sleep, errors.
+- [Measurement and averaging](measurement.md): how often to read and what a read returns.
+- [Examples](examples.md): complete ESP32-S3 applications.

@@ -1,0 +1,29 @@
+{
+  "commands": [
+    "ReadProductIdentifier",
+    "ReadScaleOffsetUnit",
+    "StartContinuous",
+    "Stop",
+    "ReadMeasurement",
+    "ReadTemperature",
+    "ReadFlowOnly",
+    "ConfigureAveraging",
+    "UpdateConcentration",
+    "EnterSleep",
+    "ExitSleep",
+    "SoftReset"
+  ],
+  "required": [
+    "Write",
+    "Read",
+    "DelayMs",
+    "EnsureInitialized"
+  ],
+  "optional": [
+    "WriteGeneralCallImpl"
+  ],
+  "sources": [
+    "inc/sfm_driver.hpp:Driver public commands",
+    "inc/sfm_i2c_interface.hpp:I2cInterface"
+  ]
+}
