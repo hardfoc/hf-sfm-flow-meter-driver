@@ -32,8 +32,9 @@ The ADDR pin selects one of four 7-bit addresses. Resistor tolerance must be ±5
 | 2.7 kΩ to GND | `0x2C` | `kSfm4300Alt2` |
 | 5.6 kΩ to GND | `0x2D` | `kSfm4300Alt3` |
 
-Default addresses of the other parts the driver knows: SFM3003-300-CL `0x28`, SFM3003-300-CE `0x2D`, SFM3119 `0x29`, SFM3019 `0x2E`, SFM3013
-`0x2F`, SFM6000D `0x24` (`sfm::addr`). The soft reset uses the general-call address `0x00`.
+Default addresses of the other parts the driver knows: SFM3003-300-CL `0x28`, SFM3003-300-CE `0x2D`, SFM3119
+`0x29`, SFM3019 `0x2E`, SFM3013 `0x2F`, SFM6000D `0x24` (`sfm::addr`). The soft reset uses the general-call
+address `0x00`.
 
 ## Bus settings
 

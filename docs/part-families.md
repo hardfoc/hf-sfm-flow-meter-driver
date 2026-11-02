@@ -22,8 +22,9 @@ plausible and wrong. The driver therefore refuses a gas the known variant is not
 | Unknown | | O<sub>2</sub>, air |
 
 The SF06 rows come from each part's datasheet (sections 2.1, 4.3.1 and 4.5). On the SFM3013-300-CLM the codes
-`0x3615` and `0x3639` select HeOx and HeOx/O<sub>2</sub> (`Gas::HeOx`, `Gas::HeOxO2Mix`), not N<sub>2</sub>O. `sfm::SupportsGas()` encodes the table;
-`sfm::FullScaleSlm()` gives the air / O<sub>2</sub> full scale of a known variant.
+`0x3615` and `0x3639` select HeOx and HeOx/O<sub>2</sub> (`Gas::HeOx`, `Gas::HeOxO2Mix`), not N<sub>2</sub>O.
+`sfm::SupportsGas()` encodes the table; `sfm::FullScaleSlm()` gives the air / O<sub>2</sub> full scale of a known
+variant.
 
 ## Why the part has to be known
 
