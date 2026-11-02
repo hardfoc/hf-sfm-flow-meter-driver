@@ -224,6 +224,50 @@ void TestStopLatencyAndRestart() {
     CHECK(dev.ActiveGas() == sfm::Gas::O2 && dev.Measuring());
 }
 
+/* Product numbers: SFM3003 datasheet Table 13 (0x04020110 CL, 0x04020710 CE), SFM3013 Table 13 (0x0402051x CL,
+ * 0x0402021x CLM), SFM3019 Table 12 (0x0402061x), SFM3119 Table 12 (0x04040110). Gases: section 4.3.1 Table 2. */
+void TestSfm30xxVariants() {
+    using sfm::Gas;
+    using sfm::Variant;
+    CHECK(sfm::VariantFromProductId(0x04020110U) == Variant::Sfm3003_300_CL);
+    CHECK(sfm::VariantFromProductId(0x04020710U) == Variant::Sfm3003_300_CE);
+    CHECK(sfm::VariantFromProductId(0x04020511U) == Variant::Sfm3013_300_CL);
+    CHECK(sfm::VariantFromProductId(0x04020210U) == Variant::Sfm3013_300_CLM);
+    CHECK(sfm::VariantFromProductId(0x04020612U) == Variant::Sfm3019_240);
+    CHECK(sfm::VariantFromProductId(0x04040110U) == Variant::Sfm3119_240_CL);
+    CHECK(sfm::FamilyOf(Variant::Sfm3019_240) == sfm::Family::Sf06);
+    CHECK(sfm::FullScaleSlm(Variant::Sfm3003_300_CE) == 300.0f);
+    CHECK(sfm::FullScaleSlm(Variant::Sfm3119_240_CL) == 240.0f);
+    CHECK(sfm::ToString(Variant::Sfm3013_300_CLM) == "SFM3013-300-CLM");
+
+    // O2, air and air/O2 on every SFM3xxx; HeOx tables only on the SFM3013-300-CLM.
+    CHECK(sfm::SupportsGas(Variant::Sfm3019_240, Gas::AirO2Mix));
+    CHECK(!sfm::SupportsGas(Variant::Sfm3019_240, Gas::CO2));
+    CHECK(!sfm::SupportsGas(Variant::Sfm3003_300_CL, Gas::N2O));
+    CHECK(!sfm::SupportsGas(Variant::Sfm3013_300_CL, Gas::HeOx));
+    CHECK(sfm::SupportsGas(Variant::Sfm3013_300_CLM, Gas::HeOx));
+    CHECK(sfm::SupportsGas(Variant::Sfm3013_300_CLM, Gas::HeOxO2Mix));
+    CHECK(!sfm::SupportsGas(Variant::Sfm3013_300_CLM, Gas::N2O));
+    CHECK(!sfm::SupportsGas(Variant::Sfm4300_20_P, Gas::HeOx));
+    CHECK(sfm::StartCommandFor(sfm::Family::Sf06, Gas::HeOx) == 0x3615);
+    CHECK(sfm::StartCommandFor(sfm::Family::Sf06, Gas::HeOxO2Mix) == 0x3639);
+    CHECK(sfm::StartCommandFor(sfm::Family::Sfx6000, Gas::HeOx) == 0);
+    CHECK(sfm::IsMixture(Gas::HeOxO2Mix));
+    CHECK(sfm::GasFromStatusNibble(Variant::Sfm3013_300_CLM, 0x2) == Gas::HeOx);
+    CHECK(sfm::GasFromStatusNibble(Variant::Sfm3013_300_CLM, 0x7) == Gas::HeOxO2Mix);
+    CHECK(sfm::GasFromStatusNibble(Variant::Sfm4300_20_P, 0x7) == Gas::N2OO2Mix);
+
+    // Identify an SFM3019 at its own address, then start the air/O2 mixture (refused while unknown).
+    FakeI2c i2c;
+    sfm::Driver<FakeI2c> dev(i2c, sfm::addr::kSfm3019);
+    CHECK(dev.StartContinuous(Gas::AirO2Mix, 210).error == sfm::DriverError::VariantUnknown);
+    i2c.QueueWords({0x0402, 0x0611, 0x0000, 0x0000, 0x0000, 0x0001});
+    const auto id = dev.ReadProductIdentifier();
+    CHECK(id.ok() && id.value.variant == Variant::Sfm3019_240);
+    i2c.QueueWords({170, static_cast<uint16_t>(-24576), sfm::kFlowUnitSlm20C});  // SFM3019 Table 14
+    CHECK(dev.StartContinuous(Gas::AirO2Mix, 210).ok());
+}
+
 // --- SFx6000 (SFM6000D) ------------------------------------------------------
 
 void TestSfx6000Identity() {
@@ -334,6 +378,7 @@ int main() {
     TestAveragingStopReset();
     TestStatusNibbleMixtures();
     TestStopLatencyAndRestart();
+    TestSfm30xxVariants();
     if (g_failures == 0) {
         std::printf("hf-sfm host tests: all passed (%s)\n", sfm::GetDriverVersion());
         return 0;

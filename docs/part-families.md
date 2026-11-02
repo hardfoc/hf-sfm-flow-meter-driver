@@ -13,10 +13,16 @@ plausible and wrong. The driver therefore refuses a gas the known variant is not
 | --- | --- | --- |
 | SFM4300-20-B, -O, -P | 0 to 20 slm | O<sub>2</sub>, air, N<sub>2</sub>O, CO<sub>2</sub>, air/O<sub>2</sub>, N<sub>2</sub>O/O<sub>2</sub>, CO<sub>2</sub>/O<sub>2</sub> |
 | SFM4300-50-B, -O, -P | 0 to 50 slm | O<sub>2</sub>, air, air/O<sub>2</sub> |
+| SFM3003-300-CL, -CE | -30 (CE: -150) to 300 slm | O<sub>2</sub>, air, air/O<sub>2</sub> |
+| SFM3013-300-CL | -30 to 300 slm | O<sub>2</sub>, air, air/O<sub>2</sub> |
+| SFM3013-300-CLM | -30 to 300 slm | O<sub>2</sub>, air, air/O<sub>2</sub>, HeOx 80/20, HeOx/O<sub>2</sub> |
+| SFM3019 | -10 to 240 slm | O<sub>2</sub>, air, air/O<sub>2</sub> |
+| SFM3119-240-CL | -10 to 240 slm | O<sub>2</sub>, air, air/O<sub>2</sub> |
 | SFM6000D-50, -20, -5 | 50, 20, 5 slm (air, O<sub>2</sub>) | O<sub>2</sub>, air, N<sub>2</sub>O, CO<sub>2</sub>, Ar, air/O<sub>2</sub> |
 | Unknown | | O<sub>2</sub>, air |
 
-The SFM4300 rows come from the SFM4300 datasheet (sections 2.1 and 4.5). `sfm::SupportsGas()` encodes the table;
+The SF06 rows come from each part's datasheet (sections 2.1, 4.3.1 and 4.5). On the SFM3013-300-CLM the codes
+`0x3615` and `0x3639` select HeOx and HeOx/O<sub>2</sub> (`Gas::HeOx`, `Gas::HeOxO2Mix`), not N<sub>2</sub>O. `sfm::SupportsGas()` encodes the table;
 `sfm::FullScaleSlm()` gives the air / O<sub>2</sub> full scale of a known variant.
 
 ## Why the part has to be known
@@ -61,9 +67,19 @@ document; the driver decodes `0x060211xx`, `0x060212xx` and `0x060214xx`.
 
 ## Other SF06 parts
 
-SFM3003, SFM3013, SFM3019 and SFM3119 speak the same command set at their own addresses (`sfm::addr`). The driver
-reads their scaling from the sensor, so readings are right, but it has no `Variant` for them and does not decode
-their product identifiers: their variant stays `Unknown`, which limits them to O<sub>2</sub> and air. Pass the
-part's address to the constructor (for example `sfm::addr::kSfm3019`).
+SFM3003, SFM3013, SFM3019 and SFM3119 speak the same command set at their own addresses (`sfm::addr`). Pass the
+part's address to the constructor (for example `sfm::addr::kSfm3019`); `ReadProductIdentifier()` then decodes the
+variant from the product numbers in each datasheet:
+
+| Product number | Variant | `sfm::Variant` | Address |
+| --- | --- | --- | --- |
+| `0x040201xx` | SFM3003-300-CL | `Sfm3003_300_CL` | `0x28` |
+| `0x040207xx` | SFM3003-300-CE | `Sfm3003_300_CE` | `0x2D` |
+| `0x040205xx` | SFM3013-300-CL | `Sfm3013_300_CL` | `0x2F` |
+| `0x040202xx` | SFM3013-300-CLM | `Sfm3013_300_CLM` | `0x2F` |
+| `0x040206xx` | SFM3019 | `Sfm3019_240` | `0x2E` |
+| `0x040401xx` | SFM3119-240-CL | `Sfm3119_240_CL` | `0x29` |
+
+The scale factor (170 per slm on these parts, offset -24576) is read from the sensor as on the SFM4300.
 
 Next: [API guide](api-guide.md).

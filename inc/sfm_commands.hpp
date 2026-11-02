@@ -28,7 +28,8 @@ constexpr uint8_t kSfm4300Alt1 = 0x2B;     ///< ADDR to GND via 1.2 kΩ
 constexpr uint8_t kSfm4300Alt2 = 0x2C;     ///< ADDR to GND via 2.7 kΩ
 constexpr uint8_t kSfm4300Alt3 = 0x2D;     ///< ADDR to GND via 5.6 kΩ
 constexpr uint8_t kSfm3119 = 0x29;
-constexpr uint8_t kSfm3003 = 0x28;
+constexpr uint8_t kSfm3003 = 0x28;        ///< SFM3003-300-CL
+constexpr uint8_t kSfm3003Ce = 0x2D;      ///< SFM3003-300-CE (SFM3003 data sheet Table 2)
 constexpr uint8_t kSfm3013 = 0x2F;
 constexpr uint8_t kSfm3019 = 0x2E;
 /// SFx6000 (SFM6000D / SFC6000D): ADDR pin to GND through a resistor (±5 %).

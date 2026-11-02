@@ -99,8 +99,8 @@ The third word of each measurement frame.
 
 `sfm::GasFromStatusNibble(family, nibble)` turns bits 15:12 back into an `sfm::Gas` using this table (SF06) or
 the SFx6000 one, and `sfm::StatusNibbleIsKnown(family, nibble)` tells a real code from a reserved one: a reserved
-nibble decodes as `Gas::Air`. On the SFM3013-300-CLM, 2 and 7 are HeOx and HeOx / O<sub>2</sub>; use
-`ActiveGas()` there.
+nibble decodes as `Gas::Air`. On the SFM3013-300-CLM, 2 and 7 are HeOx and HeOx / O<sub>2</sub>: the
+`GasFromStatusNibble(variant, nibble)` overload decodes them.
 
 ## Product identifier
 

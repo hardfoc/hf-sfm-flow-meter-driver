@@ -97,6 +97,8 @@ enum class Gas : uint8_t {
     N2OO2Mix,    ///< SF06 mixture 1 — SFM4300-20 only
     CO2O2Mix,    ///< SF06 mixture 2 — SFM4300-20 only
     Ar,          ///< SFx6000 Gas 4 only
+    HeOx,        ///< SF06 Gas 2 on SFM3013-300-CLM only: heliox 80/20 (code 0x3615)
+    HeOxO2Mix,   ///< SF06 mixture 1 on SFM3013-300-CLM only: O2 in HeOx (code 0x3639)
 };
 
 constexpr std::string_view ToString(Gas g) noexcept {
@@ -109,6 +111,8 @@ constexpr std::string_view ToString(Gas g) noexcept {
         case Gas::N2OO2Mix: return "N2O/O2";
         case Gas::CO2O2Mix: return "CO2/O2";
         case Gas::Ar:       return "Ar";
+        case Gas::HeOx:     return "HeOx";
+        case Gas::HeOxO2Mix: return "HeOx/O2";
     }
     return "?";
 }
@@ -129,7 +133,9 @@ constexpr uint16_t StartCommandFor(Family family, Gas g) noexcept {
             case Gas::Ar:       return cmd::kSfx6000StartGas4;
             case Gas::AirO2Mix: return cmd::kSfx6000StartMix0;
             case Gas::N2OO2Mix:
-            case Gas::CO2O2Mix: return 0;
+            case Gas::CO2O2Mix:
+            case Gas::HeOx:
+            case Gas::HeOxO2Mix: return 0;
         }
         return 0;
     }
@@ -141,6 +147,8 @@ constexpr uint16_t StartCommandFor(Family family, Gas g) noexcept {
         case Gas::AirO2Mix: return cmd::kStartAirO2Mix;
         case Gas::N2OO2Mix: return cmd::kStartN2OO2Mix;
         case Gas::CO2O2Mix: return cmd::kStartCO2O2Mix;
+        case Gas::HeOx:     return cmd::kStartN2O;       // 0x3615 is HeOx on the SFM3013-300-CLM
+        case Gas::HeOxO2Mix: return cmd::kStartN2OO2Mix;  // 0x3639 is HeOx/O2 on the SFM3013-300-CLM
         case Gas::Ar:       return 0;
     }
     return 0;
@@ -151,10 +159,15 @@ static_assert(StartCommandFor(Family::Sf06, Gas::CO2) == 0x361E &&
               "CO2 start code differs by family (SFM4300 data sheet / SFx6000 reference)");
 
 constexpr bool IsMixture(Gas g) noexcept {
-    return g == Gas::AirO2Mix || g == Gas::N2OO2Mix || g == Gas::CO2O2Mix;
+    return g == Gas::AirO2Mix || g == Gas::N2OO2Mix || g == Gas::CO2O2Mix || g == Gas::HeOxO2Mix;
 }
 
-/// Part variant decoded from the product identifier (data sheet Table 13).
+/**
+ * @brief Part variant decoded from the product identifier.
+ * @details SFM4300 data sheet Table 13; SFM3003 Table 13, SFM3013 Table 13,
+ *          SFM3019 Table 12, SFM3119 Table 12. New enumerators are appended,
+ *          so stored values keep their meaning.
+ */
 enum class Variant : uint8_t {
     Unknown = 0,
     Sfm4300_20_B,  ///< 0x0403011x — 20 slm, basemount
@@ -166,6 +179,12 @@ enum class Variant : uint8_t {
     Sfm6000D_50,   ///< 0x060211xx — 50 slm (Air/O2; 20 slm CO2/N2O/Ar)
     Sfm6000D_20,   ///< 0x060212xx — 20 slm (Air/O2; 10 slm CO2/N2O/Ar)
     Sfm6000D_5,    ///< 0x060214xx — 5 slm (Air/O2; 2 slm CO2/N2O/Ar)
+    Sfm3003_300_CL,   ///< 0x040201xx — −30…300 slm, address 0x28
+    Sfm3003_300_CE,   ///< 0x040207xx — −150…300 slm, address 0x2D
+    Sfm3013_300_CL,   ///< 0x040205xx — −30…300 slm, address 0x2F
+    Sfm3013_300_CLM,  ///< 0x040202xx — −30…300 slm, also heliox, address 0x2F
+    Sfm3019_240,      ///< 0x040206xx — −10…240 slm, address 0x2E
+    Sfm3119_240_CL,   ///< 0x040401xx — −10…240 slm, address 0x29
 };
 
 constexpr std::string_view ToString(Variant v) noexcept {
@@ -180,6 +199,12 @@ constexpr std::string_view ToString(Variant v) noexcept {
         case Variant::Sfm6000D_50:  return "SFM6000D-50";
         case Variant::Sfm6000D_20:  return "SFM6000D-20";
         case Variant::Sfm6000D_5:   return "SFM6000D-5";
+        case Variant::Sfm3003_300_CL:  return "SFM3003-300-CL";
+        case Variant::Sfm3003_300_CE:  return "SFM3003-300-CE";
+        case Variant::Sfm3013_300_CL:  return "SFM3013-300-CL";
+        case Variant::Sfm3013_300_CLM: return "SFM3013-300-CLM";
+        case Variant::Sfm3019_240:     return "SFM3019";
+        case Variant::Sfm3119_240_CL:  return "SFM3119-240-CL";
     }
     return "?";
 }
@@ -216,6 +241,12 @@ constexpr Variant VariantFromProductId(uint32_t product_id) noexcept {
         case 0x04030900U: return Variant::Sfm4300_50_B;
         case 0x04030700U: return Variant::Sfm4300_50_O;
         case 0x04030600U: return Variant::Sfm4300_50_P;
+        case 0x04020100U: return Variant::Sfm3003_300_CL;
+        case 0x04020700U: return Variant::Sfm3003_300_CE;
+        case 0x04020500U: return Variant::Sfm3013_300_CL;
+        case 0x04020200U: return Variant::Sfm3013_300_CLM;
+        case 0x04020600U: return Variant::Sfm3019_240;
+        case 0x04040100U: return Variant::Sfm3119_240_CL;
         default:          return Variant::Unknown;
     }
 }
@@ -232,6 +263,12 @@ constexpr float FullScaleSlm(Variant v) noexcept {
         case Variant::Sfm6000D_50:  return 50.0f;
         case Variant::Sfm6000D_20:  return 20.0f;
         case Variant::Sfm6000D_5:   return 5.0f;
+        case Variant::Sfm3003_300_CL:
+        case Variant::Sfm3003_300_CE:
+        case Variant::Sfm3013_300_CL:
+        case Variant::Sfm3013_300_CLM: return 300.0f;
+        case Variant::Sfm3019_240:
+        case Variant::Sfm3119_240_CL:  return 240.0f;
         case Variant::Unknown:      return 0.0f;
     }
     return 0.0f;
@@ -242,6 +279,8 @@ constexpr float FullScaleSlm(Variant v) noexcept {
  *
  * SFM4300-50-x: O2, Air, Air/O2 mixture only (Table 16). SFM4300-20-x: the
  * seven SF06 tables. SFM6000D-x: O2, Air, CO2, N2O, Ar and O2-in-Air.
+ * SFM3003 / SFM3013-300-CL / SFM3019 / SFM3119: O2, Air, Air/O2 (Table 2 of
+ * each data sheet); SFM3013-300-CLM adds HeOx and HeOx/O2.
  * Unknown variants: O2 and Air only — every other start code means a
  * different gas (or none) on the other family, so it is refused until the
  * identity is read (see `GasNeedsKnownFamily`).
@@ -251,15 +290,24 @@ constexpr bool SupportsGas(Variant v, Gas g) noexcept {
         case Variant::Sfm4300_50_B:
         case Variant::Sfm4300_50_O:
         case Variant::Sfm4300_50_P:
+        case Variant::Sfm3003_300_CL:
+        case Variant::Sfm3003_300_CE:
+        case Variant::Sfm3013_300_CL:
+        case Variant::Sfm3019_240:
+        case Variant::Sfm3119_240_CL:
             return g == Gas::O2 || g == Gas::Air || g == Gas::AirO2Mix;
+        case Variant::Sfm3013_300_CLM:
+            return g == Gas::O2 || g == Gas::Air || g == Gas::AirO2Mix || g == Gas::HeOx ||
+                   g == Gas::HeOxO2Mix;
         case Variant::Sfm4300_20_B:
         case Variant::Sfm4300_20_O:
         case Variant::Sfm4300_20_P:
-            return g != Gas::Ar;
+            return g != Gas::Ar && g != Gas::HeOx && g != Gas::HeOxO2Mix;
         case Variant::Sfm6000D_50:
         case Variant::Sfm6000D_20:
         case Variant::Sfm6000D_5:
-            return g != Gas::N2OO2Mix && g != Gas::CO2O2Mix;
+            return g != Gas::N2OO2Mix && g != Gas::CO2O2Mix && g != Gas::HeOx &&
+                   g != Gas::HeOxO2Mix;
         case Variant::Unknown:
             return g == Gas::O2 || g == Gas::Air;
     }
@@ -339,7 +387,7 @@ constexpr bool StatusNibbleIsKnown(Family family, uint8_t nibble) noexcept {
  * @details See `StatusNibbleIsKnown()` for the tables. A reserved or unknown
  *          nibble returns `Gas::Air`; check `StatusNibbleIsKnown()` first when
  *          that matters. On SFM3013-300-CLM, nibbles 2 and 7 are HeOx and
- *          HeOx/O2 (data sheet §4.3.1 Table 2): use `ActiveGas()` there.
+ *          HeOx/O2 (data sheet §4.3.1 Table 2): use the `Variant` overload.
  */
 constexpr Gas GasFromStatusNibble(Family family, uint8_t nibble) noexcept {
     if (family == Family::Sfx6000) {
@@ -367,6 +415,22 @@ constexpr Gas GasFromStatusNibble(Family family, uint8_t nibble) noexcept {
 
 static_assert(GasFromStatusNibble(Family::Sf06, 0x6) == Gas::AirO2Mix,
               "SFM4300 data sheet Table 5: Air/O2 (0x3632) reports 0b0110");
+
+/**
+ * @brief Variant-aware status decode: as the family overload, except that on
+ *        the SFM3013-300-CLM nibble 2 is HeOx and 7 is HeOx/O2.
+ */
+constexpr Gas GasFromStatusNibble(Variant variant, uint8_t nibble) noexcept {
+    if (variant == Variant::Sfm3013_300_CLM) {
+        if ((nibble & 0x0FU) == 0x2U) {
+            return Gas::HeOx;
+        }
+        if ((nibble & 0x0FU) == 0x7U) {
+            return Gas::HeOxO2Mix;
+        }
+    }
+    return GasFromStatusNibble(FamilyOf(variant), nibble);
+}
 
 /// One continuous-mode sample (data sheet §4.3.1 read frame).
 struct Measurement {
