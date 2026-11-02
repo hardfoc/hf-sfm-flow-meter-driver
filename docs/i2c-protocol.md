@@ -28,7 +28,7 @@ section 4. The constants are in [`inc/sfm_commands.hpp`](../inc/sfm_commands.hpp
 | `0x3646` | Start, CO<sub>2</sub> / O<sub>2</sub> (O<sub>2</sub> ‰) | `StartContinuous(Gas::CO2O2Mix, o2)`; SFM4300-20 only |
 | `0xE17D` | Transmit concentration (O<sub>2</sub> ‰) | `UpdateConcentration()`; while measuring |
 | `0xE000` | Reset I2C address pointer | `UpdateConcentration()`, after `0xE17D` |
-| `0x3FF9` | Stop continuous measurement | `Stop()`; idle after up to 0.5 ms |
+| `0x3FF9` | Stop continuous measurement | `Stop()`; idle after up to 0.5 ms, which `Stop()` waits |
 | `0x366A` | Configure averaging (N) | `ConfigureAveraging()`; idle only; 0 = average-until-read, 1 to 128 = fixed N |
 | `0x3661` | Read scale factor, offset, unit (start code) | `ReadScaleOffsetUnit()`; idle only; three words back |
 | `0x3677` | Enter sleep | `EnterSleep()`; idle only |

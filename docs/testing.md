@@ -23,6 +23,7 @@ ctest --test-dir build-host --output-on-failure
 | `TestGasGating` | `UnsupportedGas` on an SFM4300-50, `VariantUnknown` before identification, mixture argument and CRC |
 | `TestAveragingStopReset` | Averaging window limits, stop, general-call reset and its wait |
 | `TestStatusNibbleMixtures` | Status bits 15:12 for the three SF06 mixtures (6 to 8) and the reserved codes 4 and 5 |
+| `TestStopLatencyAndRestart` | The 0.5 ms wait after stop; a second start while measuring stops first |
 | `TestSfx6000Identity`, `TestSfx6000GasMapAndScaling`, `TestSfx6000Gating` | The SFx6000 family: identifier, swapped CO<sub>2</sub> / N<sub>2</sub>O codes, five-word scaling, temperature pointer, unsupported commands |
 
 All tests are in [`tests/host/sfm_driver_test.cpp`](../tests/host/sfm_driver_test.cpp).

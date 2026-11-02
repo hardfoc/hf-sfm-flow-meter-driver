@@ -44,7 +44,8 @@ matters.
 
 `StartContinuous()` checks the gas against the known variant, reads the scale factor, offset and unit for that
 gas (so the sensor must be idle), sends the start command and waits 12 ms for the first result. To change the gas,
-`Stop()` first.
+call it again: when this driver started the running measurement (`Measuring()`), it sends `Stop()` first. A
+measurement it did not start (the sensor kept measuring across an MCU reset) needs an explicit `Stop()`.
 
 ## Read
 

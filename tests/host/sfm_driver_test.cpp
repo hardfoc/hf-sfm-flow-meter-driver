@@ -199,6 +199,31 @@ void TestStatusNibbleMixtures() {
     CHECK(st.gas_fraction_permille() == 400 && !st.pure_gas());
 }
 
+/* SFM4300 datasheet section 4.3.4 Table 7: after the stop command the sensor needs up to 0.5 ms before it accepts a
+ * new command, and while measuring it accepts no other command than reset and update concentration. */
+void TestStopLatencyAndRestart() {
+    FakeI2c i2c;
+    sfm::Driver<FakeI2c> dev(i2c);
+    dev.AssumeVariant(sfm::Variant::Sfm4300_20_P);
+    CHECK(dev.Stop().ok());
+    CHECK(i2c.delayed_ms >= 1);  // >= 0.5 ms rounded up to the millisecond the port can wait
+
+    i2c.QueueWords({2500, static_cast<uint16_t>(-28672), sfm::kFlowUnitSlm20C});
+    CHECK(dev.StartContinuous(sfm::Gas::Air).ok());
+    i2c.writes.clear();
+    i2c.delayed_ms = 0;
+
+    // Second start while measuring: stop, wait, then scaling query and the new start code.
+    i2c.QueueWords({2500, static_cast<uint16_t>(-28672), sfm::kFlowUnitSlm20C});
+    CHECK(dev.StartContinuous(sfm::Gas::O2).ok());
+    CHECK(i2c.writes.size() == 3);
+    CHECK(i2c.writes[0].bytes.size() == 2 && i2c.writes[0].bytes[0] == 0x3F && i2c.writes[0].bytes[1] == 0xF9);
+    CHECK(i2c.writes.size() == 3 && i2c.writes[1].bytes[0] == 0x36 && i2c.writes[1].bytes[1] == 0x61);
+    CHECK(i2c.writes.size() == 3 && i2c.writes[2].bytes[1] == 0x03);
+    CHECK(i2c.delayed_ms >= 1 + sfm::timing::kFirstResultAfterStartMs);
+    CHECK(dev.ActiveGas() == sfm::Gas::O2 && dev.Measuring());
+}
+
 // --- SFx6000 (SFM6000D) ------------------------------------------------------
 
 void TestSfx6000Identity() {
@@ -308,6 +333,7 @@ int main() {
     TestGasGating();
     TestAveragingStopReset();
     TestStatusNibbleMixtures();
+    TestStopLatencyAndRestart();
     if (g_failures == 0) {
         std::printf("hf-sfm host tests: all passed (%s)\n", sfm::GetDriverVersion());
         return 0;

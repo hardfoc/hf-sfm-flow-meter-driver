@@ -72,7 +72,7 @@ sequenceDiagram
 | Soft reset or exit sleep until ready | 16 ms typ., 20 ms max. | `SoftReset()` waits 20 ms; `ExitSleep()` polls for up to 20 ms |
 | First result after a start command | 12 ms | `StartContinuous()` waits 12 ms |
 | Warm-up for an accurate result | 30 ms typ. (includes the 12 ms) | Nothing: discard readings in the first 30 ms |
-| Stop until the next command | 0.5 ms max. | Nothing: wait before the next command |
+| Stop until the next command | 0.5 ms max. | `Stop()` waits 1 ms |
 | Settling after a change of gas | 70 ms typ. | |
 | Flow update rate, no averaging | 2000 Hz (1800 to 2200) | |
 | Temperature update rate | 90 Hz (80 to 100) | |

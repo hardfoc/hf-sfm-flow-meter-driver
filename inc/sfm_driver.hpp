@@ -149,7 +149,10 @@ public:
      *
      * Reads the gas table scaling first (so `ReadMeasurement()` can convert),
      * refuses gases the known variant does not calibrate, then issues the start
-     * command and waits `timing::kFirstResultAfterStartMs`.
+     * command and waits `timing::kFirstResultAfterStartMs`. If this driver
+     * started a measurement that is still running (`Measuring()`), it sends
+     * `Stop()` first: the sensor takes no other command while measuring
+     * (§4.3.4), so switching gas needs stop, 0.5 ms, query, start.
      *
      * @param g            Gas or mixture.
      * @param o2_permille  O2 volume fraction for mixtures (ignored for pure gases).
@@ -169,6 +172,12 @@ public:
         if (IsMixture(g) && o2_permille > 1000U) {
             return DriverResult<void>::failure(DriverError::InvalidParameter);
         }
+        if (measuring_) {
+            const auto st = Stop();
+            if (!st.ok()) {
+                return st;
+            }
+        }
         const auto sc = ReadScaleOffsetUnit(g);
         if (!sc.ok()) {
             return DriverResult<void>::failure(sc.error);
@@ -186,7 +195,11 @@ public:
         return DriverResult<void>::success();
     }
 
-    /// Stop continuous measurement → idle (§4.3.4).
+    /**
+     * @brief Stop continuous measurement → idle (§4.3.4).
+     * @details Waits `timing::kStopToIdleMs` after the command: the sensor
+     *          needs up to 0.5 ms to enter idle mode before the next command.
+     */
     DriverResult<void> Stop() noexcept {
         if (!i2c_.EnsureInitialized()) {
             return DriverResult<void>::failure(DriverError::NotInitialized);
@@ -195,6 +208,7 @@ public:
             return DriverResult<void>::failure(DriverError::BusWrite);
         }
         measuring_ = false;
+        i2c_.DelayMs(timing::kStopToIdleMs);
         return DriverResult<void>::success();
     }
 
