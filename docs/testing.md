@@ -22,9 +22,15 @@ ctest --test-dir build-host --output-on-failure
 | `TestStartAndMeasure` | Scaling read before the start, start code, the 12 ms wait, flow and temperature conversion, status decoding |
 | `TestGasGating` | `UnsupportedGas` on an SFM4300-50, `VariantUnknown` before identification, mixture argument and CRC |
 | `TestAveragingStopReset` | Averaging window limits, stop, general-call reset and its wait |
+| `TestStatusNibbleMixtures` | Status bits 15:12 for the three SF06 mixtures (6 to 8) and the reserved codes 4 and 5 |
+| `TestStopLatencyAndRestart` | The 0.5 ms wait after stop; a second start while measuring stops first |
+| `TestSfm30xxVariants` | SFM3003 / 3013 / 3019 / 3119 product numbers, their gas tables, the SFM3013-300-CLM HeOx codes |
+| `TestReplyErrors` | `BusRead` for a NACKed identifier or scaling reply, `UnexpectedUnit` for an unusable scaling reply |
 | `TestSfx6000Identity`, `TestSfx6000GasMapAndScaling`, `TestSfx6000Gating` | The SFx6000 family: identifier, swapped CO<sub>2</sub> / N<sub>2</sub>O codes, five-word scaling, temperature pointer, unsupported commands |
 
-All tests are in [`tests/host/sfm_driver_test.cpp`](../tests/host/sfm_driver_test.cpp).
+All tests are in [`tests/host/sfm_driver_test.cpp`](../tests/host/sfm_driver_test.cpp). A second CTest test,
+`hf_sfm_install_consumer`, runs `cmake --install` into a scratch prefix and builds and runs a
+`find_package(hf_sfm)` consumer ([`tests/install/`](../tests/install/run_install_test.cmake)).
 
 ## Documentation snippets
 

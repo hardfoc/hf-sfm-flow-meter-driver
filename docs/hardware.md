@@ -32,8 +32,9 @@ The ADDR pin selects one of four 7-bit addresses. Resistor tolerance must be ±5
 | 2.7 kΩ to GND | `0x2C` | `kSfm4300Alt2` |
 | 5.6 kΩ to GND | `0x2D` | `kSfm4300Alt3` |
 
-Default addresses of the other parts the driver knows: SFM3003 `0x28`, SFM3119 `0x29`, SFM3019 `0x2E`, SFM3013
-`0x2F`, SFM6000D `0x24` (`sfm::addr`). The soft reset uses the general-call address `0x00`.
+Default addresses of the other parts the driver knows: SFM3003-300-CL `0x28`, SFM3003-300-CE `0x2D`, SFM3119
+`0x29`, SFM3019 `0x2E`, SFM3013 `0x2F`, SFM6000D `0x24` (`sfm::addr`). The soft reset uses the general-call
+address `0x00`.
 
 ## Bus settings
 
@@ -72,7 +73,7 @@ sequenceDiagram
 | Soft reset or exit sleep until ready | 16 ms typ., 20 ms max. | `SoftReset()` waits 20 ms; `ExitSleep()` polls for up to 20 ms |
 | First result after a start command | 12 ms | `StartContinuous()` waits 12 ms |
 | Warm-up for an accurate result | 30 ms typ. (includes the 12 ms) | Nothing: discard readings in the first 30 ms |
-| Stop until the next command | 0.5 ms max. | Nothing: wait before the next command |
+| Stop until the next command | 0.5 ms max. | `Stop()` waits 1 ms |
 | Settling after a change of gas | 70 ms typ. | |
 | Flow update rate, no averaging | 2000 Hz (1800 to 2200) | |
 | Temperature update rate | 90 Hz (80 to 100) | |

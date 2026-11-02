@@ -20,10 +20,9 @@ bool known_part(MyI2c& i2c) {
   // The sensor is already measuring (the identifier is idle-only), and the board fits an SFM4300-20-P.
   sfm::Driver<MyI2c> flow(i2c, sfm::addr::kSfm4300Default);
   flow.AssumeVariant(sfm::Variant::Sfm4300_20_P);  // also sets the family (SF06)
-  if (!flow.Stop()) {
+  if (!flow.Stop()) {                              // this driver did not start it, so stop it here
     return false;
   }
-  i2c.DelayMs(1);
   return flow.StartContinuous(sfm::Gas::CO2).ok();
   // --8<-- [end:variant]
 }

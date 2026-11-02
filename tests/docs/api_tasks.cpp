@@ -85,12 +85,11 @@ bool mixture(Flow& flow) {
   return true;
 }
 
-bool averaging(Flow& flow, MyI2c& i2c) {
+bool averaging(Flow& flow) {
   // --8<-- [start:averaging]
-  if (!flow.Stop()) {                              // the sensor takes commands only in idle mode
+  if (!flow.Stop()) {                              // to idle; waits the 0.5 ms the sensor needs
     return false;
   }
-  i2c.DelayMs(1);                                  // up to 0.5 ms until it is idle
   if (!flow.ConfigureAveraging(4)) {               // fixed N = 4: one value every 2 ms (500 Hz)
     return false;
   }
@@ -101,12 +100,11 @@ bool averaging(Flow& flow, MyI2c& i2c) {
   return true;
 }
 
-bool power(Flow& flow, MyI2c& i2c) {
+bool power(Flow& flow) {
   // --8<-- [start:power]
-  if (!flow.Stop()) {                              // continuous measurement to idle
+  if (!flow.Stop()) {                              // continuous measurement to idle (waits 0.5 ms)
     return false;
   }
-  i2c.DelayMs(1);
   if (!flow.EnterSleep()) {                        // SF06 only, from idle: 0.4 uA typical
     return false;
   }
@@ -142,7 +140,7 @@ bool errors(Flow& flow) {
       return flow.StartContinuous(sfm::Gas::N2O).ok();
     case sfm::DriverError::UnsupportedGas:         // this variant has no N2O table (SFM4300-50)
       return flow.StartContinuous(sfm::Gas::Air).ok();
-    default:                                       // BusWrite, NoData, Crc, NotInitialized
+    default:                                       // BusWrite, BusRead, UnexpectedUnit, Crc, NotInitialized
       std::printf("start failed: %s\n", sfm::ToString(r.error).data());
       return false;
   }

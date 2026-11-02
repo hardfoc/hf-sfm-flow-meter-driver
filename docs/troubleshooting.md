@@ -2,7 +2,7 @@
 
 Symptoms you may see while bringing up an SF06 flow meter, their causes and the fix for each.
 
-Start with the error the call returned (`sfm::ToString(r.error)`): it separates bus problems (`BusWrite`,
+Start with the error the call returned (`sfm::ToString(r.error)`): it separates bus problems (`BusWrite`, `BusRead`,
 `NoData` on every call) from data problems (`Crc`) and from configuration problems (`UnsupportedGas`,
 `VariantUnknown`).
 
@@ -10,7 +10,7 @@ Start with the error the call returned (`sfm::ToString(r.error)`): it separates 
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| Every call returns `BusWrite` or `NoData` | Wrong address | Check the ADDR strap: open or GND is `0x2A`; scan the bus |
+| Every call returns `BusWrite`, `BusRead` or `NoData` | Wrong address | Check the ADDR strap: open or GND is `0x2A`; scan the bus |
 | | No pull-ups, or SDA and SCL swapped | External pull-ups on both lines; check the connector pin order (SDA is pin 2, SCL pin 5) |
 | | The sensor is still starting | Wait 20 ms after power-up before the first call |
 | | ADDR tied to VDD | Not allowed: tie it to GND or leave it open |
@@ -29,7 +29,7 @@ Start with the error the call returned (`sfm::ToString(r.error)`): it separates 
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| Identifier, averaging or a new start fails | The sensor is measuring; it takes these only in idle mode | `Stop()`, wait 0.5 ms, then the command |
+| Identifier, averaging or a new start fails | The sensor is measuring; it takes these only in idle mode | `Stop()` (it waits the 0.5 ms), then the command |
 | `UnsupportedGas` | The variant has no table for the gas (for example CO<sub>2</sub> on an SFM4300-50) | Use a calibrated gas ([Gases and part families](part-families.md)) |
 | `VariantUnknown` | The gas's start code depends on the family | `ReadProductIdentifier()` in idle mode, or `AssumeVariant()` |
 | `NotSupported` from `SoftReset()` | The port has no `WriteGeneralCallImpl()` | Add it, or power-cycle the sensor |
@@ -47,4 +47,3 @@ plausible, systematically wrong flow.
 | A reading lags a step change | Average-until-read smooths exponentially when you read less often than every 64 ms (status bit 11) | Read at least every 64 ms, or use fixed-N averaging |
 | A constant offset | The sensor is not horizontal, or the line pressure is outside 0.66 bar to 7 bar absolute | Mount it horizontally with the connector up ([Hardware](hardware.md#fluidics)) |
 | The temperature differs from the gas temperature | The sensor reports its silicon temperature | Expected; insulate the sensor if you need the gas temperature |
-| The status shows the wrong mixture | `GasFromStatusNibble()` maps SF06 mixtures to 4 to 6; the datasheet uses 6 to 8 | Use `ActiveGas()` ([I2C protocol](i2c-protocol.md#status-word)) |

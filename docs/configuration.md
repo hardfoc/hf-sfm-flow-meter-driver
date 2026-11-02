@@ -43,6 +43,7 @@ change them.
 | Constant | Value | Use |
 | --- | --- | --- |
 | `sfm::timing::kFirstResultAfterStartMs` | 12 | Wait in `StartContinuous()` |
+| `sfm::timing::kStopToIdleMs` | 1 | Wait in `Stop()` (the sensor needs up to 0.5 ms) |
 | `sfm::timing::kAccuracySettleAfterStartMs` | 30 | Readings before this are a few percent off |
 | `sfm::timing::kSoftResetMs` | 20 | Wait after an SF06 soft reset (16 ms typical) |
 | `sfm::timing::kSfx6000SoftResetMs` | 30 | Wait after an SFx6000 soft reset |
