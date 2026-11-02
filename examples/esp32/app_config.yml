@@ -24,7 +24,7 @@ apps:
       - "Decode flow / temperature / status word with CRC-8 checks"
 
   sfm_flow_demo:
-    description: "500 Hz poll with fixed-N averaging, the CO2 table when the variant has it (else air), statistics every second"
+    description: "500 Hz poll with fixed-N averaging, CO2 table when the variant has it, else air; 1 s statistics"
     source_file: "sfm_flow_demo.cpp"
     category: "example"
     idf_versions: ["release/v5.5"]

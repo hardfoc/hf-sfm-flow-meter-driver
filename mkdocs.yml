@@ -10,7 +10,8 @@
 # Pages: docs/, order: docs/.nav.yml, rules: docs/DOCS-STYLE-GUIDE.md in hf-general-ci-tools.
 site_name: SFM Flow Meter Driver
 site_description: >-
-  Header-only C++17 driver for Sensirion SF06-family gas mass flow meters such as the SFM4300 (I2C). Part of the HardFOC ecosystem.
+  Header-only C++17 driver for Sensirion SF06-family gas mass flow meters such as the SFM4300 (I2C): gas and
+  mixture measurement, CRC-checked reads, averaging, sleep and product identification.
 repo_url: https://github.com/hardfoc/hf-sfm-flow-meter-driver
 
 theme:

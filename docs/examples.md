@@ -13,7 +13,7 @@ request.
 | App | What it shows | Source | CI |
 | --- | --- | --- | --- |
 | `sfm_minimal_example` :material-star:{ title="featured" } | Soft reset, product identifier, air table, one flow / temperature / status frame per second | [`sfm_minimal_example.cpp`](../examples/esp32/main/sfm_minimal_example.cpp) | yes |
-| `sfm_flow_demo` :material-star:{ title="featured" } | 500 Hz poll with fixed-N averaging, the CO2 table when the variant has it (else air), statistics every second | [`sfm_flow_demo.cpp`](../examples/esp32/main/sfm_flow_demo.cpp) | yes |
+| `sfm_flow_demo` :material-star:{ title="featured" } | 500 Hz poll with fixed-N averaging, CO2 table when the variant has it, else air; 1 s statistics | [`sfm_flow_demo.cpp`](../examples/esp32/main/sfm_flow_demo.cpp) | yes |
 
 Build and flash one (from `examples/esp32`, ESP-IDF environment loaded):
 
