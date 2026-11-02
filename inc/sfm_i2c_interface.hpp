@@ -68,12 +68,14 @@ public:
     }
 
 private:
+    /// @cond INTERNAL
     template <typename, typename = void>
     struct HasGeneralCall : std::false_type {};
     template <typename T>
     struct HasGeneralCall<
         T, std::void_t<decltype(std::declval<T>().WriteGeneralCallImpl(uint8_t{}))>>
         : std::true_type {};
+    /// @endcond
 };
 
 }  // namespace sfm
