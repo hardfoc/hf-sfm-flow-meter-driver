@@ -2,7 +2,7 @@
 
 Symptoms you may see while bringing up an SF06 flow meter, their causes and the fix for each.
 
-Start with the error the call returned (`sfm::ToString(r.error)`): it separates bus problems (`BusWrite`,
+Start with the error the call returned (`sfm::ToString(r.error)`): it separates bus problems (`BusWrite`, `BusRead`,
 `NoData` on every call) from data problems (`Crc`) and from configuration problems (`UnsupportedGas`,
 `VariantUnknown`).
 
@@ -10,7 +10,7 @@ Start with the error the call returned (`sfm::ToString(r.error)`): it separates 
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| Every call returns `BusWrite` or `NoData` | Wrong address | Check the ADDR strap: open or GND is `0x2A`; scan the bus |
+| Every call returns `BusWrite`, `BusRead` or `NoData` | Wrong address | Check the ADDR strap: open or GND is `0x2A`; scan the bus |
 | | No pull-ups, or SDA and SCL swapped | External pull-ups on both lines; check the connector pin order (SDA is pin 2, SCL pin 5) |
 | | The sensor is still starting | Wait 20 ms after power-up before the first call |
 | | ADDR tied to VDD | Not allowed: tie it to GND or leave it open |

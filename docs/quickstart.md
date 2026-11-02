@@ -62,7 +62,7 @@ This example is built by the host CI, so it compiles against the current headers
 
 | Symptom | First thing to check |
 | --- | --- |
-| `ReadProductIdentifier()` returns `NoData` or `BusWrite` | Pull-ups, the address (ADDR strap), SDA and SCL swapped, the sensor powered |
+| `ReadProductIdentifier()` returns `BusRead` or `BusWrite` | Pull-ups, the address (ADDR strap), SDA and SCL swapped, the sensor powered |
 | It fails only after a start | The sensor takes commands only in idle mode: call `Stop()` first |
 | `ReadMeasurement()` always returns `NoData` | No start command was sent, or the poll is faster than the sample rate |
 | Occasional `Crc` errors | Weak pull-ups or long wires; lower the clock to 100 kHz ([Troubleshooting](troubleshooting.md)) |

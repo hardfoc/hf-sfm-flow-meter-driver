@@ -140,7 +140,7 @@ bool errors(Flow& flow) {
       return flow.StartContinuous(sfm::Gas::N2O).ok();
     case sfm::DriverError::UnsupportedGas:         // this variant has no N2O table (SFM4300-50)
       return flow.StartContinuous(sfm::Gas::Air).ok();
-    default:                                       // BusWrite, NoData, Crc, NotInitialized
+    default:                                       // BusWrite, BusRead, UnexpectedUnit, Crc, NotInitialized
       std::printf("start failed: %s\n", sfm::ToString(r.error).data());
       return false;
   }

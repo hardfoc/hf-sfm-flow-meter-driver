@@ -111,7 +111,9 @@ the active gas. Read the frame when IRQn falls; see [Measurement and averaging](
 
 | Error | Meaning | What to do |
 | --- | --- | --- |
-| `NoData` | The read was NACKed: no new sample yet, the sensor is idle, or nothing answered | Skip the tick; if it persists, check the start and the address |
+| `NoData` | A result-buffer read was NACKed: no new sample yet, the sensor is idle, or nothing answered | Skip the tick; if it persists, check the start and the address |
+| `BusRead` | The reply of the identifier or scaling command was NACKed | Wiring, the address, or the sensor is measuring (these need idle mode) |
+| `UnexpectedUnit` | The scaling reply cannot convert: scale factor 0, or a unit other than `0x0148` on a known SF06 part | The variant assumed does not match the part, or the reply is corrupt |
 | `Crc` | A received word failed its CRC-8 | Count it; persistent errors mean noise, weak pull-ups or a port that returns partial reads |
 | `BusWrite` | A command write was NACKed or failed | Address, wiring, or the sensor is measuring when the command needs idle |
 | `NotInitialized` | The port's `EnsureInitialized()` returned `false` | Bus set-up in your port |
@@ -119,8 +121,6 @@ the active gas. Read the frame when IRQn falls; see [Measurement and averaging](
 | `VariantUnknown` | The gas's start code depends on the family and the part is not known | `ReadProductIdentifier()` or `AssumeVariant()` first |
 | `InvalidParameter` | Averaging over 128, O<sub>2</sub> fraction over 1000 ‰ | Fix the argument |
 | `NotSupported` | The command does not exist on this family, or the port has no general-call write | See [Gases and part families](part-families.md) |
-
-`BusRead` and `UnexpectedUnit` are declared for logging compatibility; the current driver does not return them.
 
 ## SFx6000 temperature
 

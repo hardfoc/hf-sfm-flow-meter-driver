@@ -268,6 +268,35 @@ void TestSfm30xxVariants() {
     CHECK(dev.StartContinuous(Gas::AirO2Mix, 210).ok());
 }
 
+/* SFM4300 datasheet sections 4.3.6 and 4.3.9: identifier and scaling replies follow their command in idle mode, so a
+ * NACK there is a failed read, not "no sample yet". Section 4.3.6: the flow unit of every SF06 table is 0x0148. */
+void TestReplyErrors() {
+    FakeI2c i2c;
+    sfm::Driver<FakeI2c> dev(i2c);
+    const auto id = dev.ReadProductIdentifier();  // nothing queued: the read is NACKed
+    CHECK(!id.ok() && id.error == sfm::DriverError::BusRead);
+    dev.AssumeVariant(sfm::Variant::Sfm4300_20_P);
+    const auto sc = dev.ReadScaleOffsetUnit(sfm::Gas::Air);
+    CHECK(!sc.ok() && sc.error == sfm::DriverError::BusRead);
+
+    // Wrong unit word on a known SF06 part: refuse to start (the conversion would be wrong).
+    i2c.writes.clear();
+    i2c.QueueWords({2500, static_cast<uint16_t>(-28672), 0x0000});
+    const auto st = dev.StartContinuous(sfm::Gas::Air);
+    CHECK(!st.ok() && st.error == sfm::DriverError::UnexpectedUnit);
+    CHECK(!dev.Measuring());
+    CHECK(i2c.writes.size() == 1);  // the scaling query only, no start command
+
+    // A zero scale factor cannot convert anything either.
+    i2c.QueueWords({0, static_cast<uint16_t>(-28672), sfm::kFlowUnitSlm20C});
+    const auto z = dev.StartContinuous(sfm::Gas::Air);
+    CHECK(!z.ok() && z.error == sfm::DriverError::UnexpectedUnit);
+
+    // The measurement buffer still reports a NACK as NoData.
+    i2c.nack_reads = true;
+    CHECK(dev.ReadFlowOnly().error == sfm::DriverError::NoData);
+}
+
 // --- SFx6000 (SFM6000D) ------------------------------------------------------
 
 void TestSfx6000Identity() {
@@ -379,6 +408,7 @@ int main() {
     TestStatusNibbleMixtures();
     TestStopLatencyAndRestart();
     TestSfm30xxVariants();
+    TestReplyErrors();
     if (g_failures == 0) {
         std::printf("hf-sfm host tests: all passed (%s)\n", sfm::GetDriverVersion());
         return 0;

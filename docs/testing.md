@@ -25,6 +25,7 @@ ctest --test-dir build-host --output-on-failure
 | `TestStatusNibbleMixtures` | Status bits 15:12 for the three SF06 mixtures (6 to 8) and the reserved codes 4 and 5 |
 | `TestStopLatencyAndRestart` | The 0.5 ms wait after stop; a second start while measuring stops first |
 | `TestSfm30xxVariants` | SFM3003 / 3013 / 3019 / 3119 product numbers, their gas tables, the SFM3013-300-CLM HeOx codes |
+| `TestReplyErrors` | `BusRead` for a NACKed identifier or scaling reply, `UnexpectedUnit` for an unusable scaling reply |
 | `TestSfx6000Identity`, `TestSfx6000GasMapAndScaling`, `TestSfx6000Gating` | The SFx6000 family: identifier, swapped CO<sub>2</sub> / N<sub>2</sub>O codes, five-word scaling, temperature pointer, unsupported commands |
 
 All tests are in [`tests/host/sfm_driver_test.cpp`](../tests/host/sfm_driver_test.cpp).

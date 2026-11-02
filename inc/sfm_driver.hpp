@@ -86,7 +86,7 @@ public:
             return DriverResult<ProductInfo>::failure(DriverError::BusWrite);
         }
         uint16_t words[6]{};
-        const DriverError err = ReadWords(words, 6);
+        const DriverError err = ReadWords(words, 6, DriverError::BusRead);
         if (err != DriverError::None) {
             return DriverResult<ProductInfo>::failure(err);
         }
@@ -128,7 +128,7 @@ public:
             return DriverResult<Scaling>::failure(DriverError::BusWrite);
         }
         uint16_t words[5]{};
-        const DriverError err = ReadWords(words, sfx ? 5 : 3);
+        const DriverError err = ReadWords(words, sfx ? 5 : 3, DriverError::BusRead);
         if (err != DriverError::None) {
             return DriverResult<Scaling>::failure(err);
         }
@@ -148,7 +148,9 @@ public:
      * @brief Start continuous measurement for @p g (§4.3.1).
      *
      * Reads the gas table scaling first (so `ReadMeasurement()` can convert),
-     * refuses gases the known variant does not calibrate, then issues the start
+     * refuses gases the known variant does not calibrate, refuses a scaling
+     * reply it cannot use (`UnexpectedUnit`: scale 0, or a unit other than
+     * 0x0148 on a known SF06 part), then issues the start
      * command and waits `timing::kFirstResultAfterStartMs`. If this driver
      * started a measurement that is still running (`Measuring()`), it sends
      * `Stop()` first: the sensor takes no other command while measuring
@@ -181,6 +183,13 @@ public:
         const auto sc = ReadScaleOffsetUnit(g);
         if (!sc.ok()) {
             return DriverResult<void>::failure(sc.error);
+        }
+        /* A zero scale factor cannot convert, and every SF06 data sheet fixes
+         * the flow unit at 0x0148 (slm, §4.3.6): anything else on a known SF06
+         * part means the reply is not what the conversion assumes. */
+        if (!sc.value.valid || (family_ == Family::Sf06 && variant_ != Variant::Unknown &&
+                                sc.value.unit != kFlowUnitSlm20C)) {
+            return DriverResult<void>::failure(DriverError::UnexpectedUnit);
         }
         const uint16_t start = StartCommandFor(family_, g);
         const bool ok = IsMixture(g) ? WriteCommandWithArg(start, o2_permille)
@@ -419,13 +428,19 @@ private:
         return i2c_.Write(address_, tx, sizeof(tx));
     }
 
-    DriverError ReadWords(uint16_t* out, std::size_t count) noexcept {
+    /**
+     * @param on_nack Error for a NACKed read: `NoData` for the result buffer
+     *        (no new sample yet, §4.3.1), `BusRead` for a command reply that
+     *        must follow its command (identifier §4.3.9, scaling §4.3.6).
+     */
+    DriverError ReadWords(uint16_t* out, std::size_t count,
+                          DriverError on_nack = DriverError::NoData) noexcept {
         if (count == 0 || count > 6) {
             return DriverError::InvalidParameter;
         }
         uint8_t rx[18]{};
         if (!i2c_.Read(address_, rx, 3 * count)) {
-            return DriverError::NoData;
+            return on_nack;
         }
         return DecodeWords(rx, count, out);
     }

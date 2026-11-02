@@ -30,12 +30,12 @@ enum class DriverError : uint8_t {
     InvalidParameter,   ///< bad argument (e.g. averaging window > 128)
     NotInitialized,     ///< transport `EnsureInitialized()` failed
     BusWrite,           ///< command write NACKed / bus error
-    BusRead,            ///< read failed (bus error)
-    NoData,             ///< read NACKed — no fresh sample yet / not measuring
+    BusRead,            ///< command reply (identifier, scaling) NACKed / bus error
+    NoData,             ///< result-buffer read NACKed — no fresh sample yet / not measuring
     Crc,                ///< CRC-8 mismatch on a received word
     UnsupportedGas,     ///< gas / mixture not calibrated on this variant
     NotSupported,       ///< transport lacks the feature (e.g. general call)
-    UnexpectedUnit,     ///< flow-unit code differs from the expected slm code
+    UnexpectedUnit,     ///< scaling unusable: scale 0, or unit ≠ 0x0148 on a known SF06 part
     VariantUnknown,     ///< gas needs a known part family (identity not read)
 };
 
