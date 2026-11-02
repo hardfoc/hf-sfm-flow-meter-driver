@@ -1,0 +1,5 @@
+<map id="inc/sfm_driver.hpp" name="inc/sfm_driver.hpp">
+<area shape="rect" id="Node000001" title="Sensirion flow&#45;meter I2C client: SF06 (SFM4300 data sheet §4) and SFx6000 (SFM6000D,..." alt="" coords="5,5,148,31"/>
+<area shape="rect" id="Node000002" href="$sfm_8hpp.html" title="Umbrella header for the HF&#45;SFM (Sensirion SF06&#45;family) flow&#45;meter driver." alt="" coords="27,79,126,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,44,79,79,74,79,74,44"/>
+</map>
