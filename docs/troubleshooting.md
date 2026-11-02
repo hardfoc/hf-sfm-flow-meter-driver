@@ -29,7 +29,7 @@ Start with the error the call returned (`sfm::ToString(r.error)`): it separates 
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| `ReadProductIdentifier()` or `ConfigureAveraging()` fails, or `StartContinuous()` fails with a new gas | The sensor is measuring; it takes these only in idle mode | `Stop()`, wait 0.5 ms, then the command |
+| Identifier, averaging or a new start fails | The sensor is measuring; it takes these only in idle mode | `Stop()`, wait 0.5 ms, then the command |
 | `UnsupportedGas` | The variant has no table for the gas (for example CO<sub>2</sub> on an SFM4300-50) | Use a calibrated gas ([Gases and part families](part-families.md)) |
 | `VariantUnknown` | The gas's start code depends on the family | `ReadProductIdentifier()` in idle mode, or `AssumeVariant()` |
 | `NotSupported` from `SoftReset()` | The port has no `WriteGeneralCallImpl()` | Add it, or power-cycle the sensor |

@@ -7,14 +7,14 @@ from [`tests/docs/configuration.cpp`](../tests/docs/configuration.cpp).
 
 ## Settings
 
-| Setting | How | Default | Notes |
-| --- | --- | --- | --- |
-| I2C address | Constructor, `SetAddress()` | `0x2A` (`sfm::addr::kSfm4300Default`) | Must match the ADDR strap ([Hardware](hardware.md#i2c-address)) |
-| Part family | Constructor `family` | `sfm::Family::Sf06` | Replaced once the variant is known |
-| Variant | `ReadProductIdentifier()`, `AssumeVariant()` | `Unknown`: O<sub>2</sub> and air only | Decides which gases may start |
-| Gas | `StartContinuous(gas)` | none | Per measurement |
-| O<sub>2</sub> fraction | `StartContinuous(mix, o2_permille)`, `UpdateConcentration()` | 0 ‰ | Mixtures only, 0 to 1000 ‰ |
-| Averaging | `ConfigureAveraging(n)` | 0: average-until-read | Idle only; 1 to 128 fixed-N; reset clears it |
+| Setting | How | Default |
+| --- | --- | --- |
+| I2C address | Constructor, `SetAddress()` | `0x2A`; must match the ADDR strap ([Hardware](hardware.md#i2c-address)) |
+| Part family | Constructor `family` | `Sf06`; replaced once the variant is known |
+| Variant | `ReadProductIdentifier()`, `AssumeVariant()` | `Unknown`: O<sub>2</sub> and air only |
+| Gas | `StartContinuous(gas)` | None; set per measurement |
+| O<sub>2</sub> fraction | `StartContinuous(mix, o2)`, `UpdateConcentration()` | 0 ‰; mixtures only, 0 to 1000 ‰ |
+| Averaging | `ConfigureAveraging(n)` | 0, average-until-read; idle only; a reset restores it |
 
 ## Several sensors on one bus
 

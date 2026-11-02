@@ -9,12 +9,12 @@ A thermal flow sensor is calibrated per gas. Measuring CO<sub>2</sub> with the a
 plausible and wrong. The driver therefore refuses a gas the known variant is not calibrated for, with
 `DriverError::UnsupportedGas`.
 
-| Variant | Range | O<sub>2</sub> | Air | N<sub>2</sub>O | CO<sub>2</sub> | Air/O<sub>2</sub> | N<sub>2</sub>O/O<sub>2</sub> | CO<sub>2</sub>/O<sub>2</sub> | Ar |
-| --- | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| SFM4300-20-B, -O, -P | 0 to 20 slm | yes | yes | yes | yes | yes | yes | yes | |
-| SFM4300-50-B, -O, -P | 0 to 50 slm | yes | yes | | | yes | | | |
-| SFM6000D-50, -20, -5 | 50, 20, 5 slm (air, O<sub>2</sub>) | yes | yes | yes | yes | yes | | | yes |
-| Unknown | | yes | yes | | | | | | |
+| Variant | Range | Calibrated gases |
+| --- | --- | --- |
+| SFM4300-20-B, -O, -P | 0 to 20 slm | O<sub>2</sub>, air, N<sub>2</sub>O, CO<sub>2</sub>, air/O<sub>2</sub>, N<sub>2</sub>O/O<sub>2</sub>, CO<sub>2</sub>/O<sub>2</sub> |
+| SFM4300-50-B, -O, -P | 0 to 50 slm | O<sub>2</sub>, air, air/O<sub>2</sub> |
+| SFM6000D-50, -20, -5 | 50, 20, 5 slm (air, O<sub>2</sub>) | O<sub>2</sub>, air, N<sub>2</sub>O, CO<sub>2</sub>, Ar, air/O<sub>2</sub> |
+| Unknown | | O<sub>2</sub>, air |
 
 The SFM4300 rows come from the SFM4300 datasheet (sections 2.1 and 4.5). `sfm::SupportsGas()` encodes the table;
 `sfm::FullScaleSlm()` gives the air / O<sub>2</sub> full scale of a known variant.

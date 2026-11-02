@@ -17,24 +17,24 @@ section 4. The constants are in [`inc/sfm_commands.hpp`](../inc/sfm_commands.hpp
 
 ## Commands
 
-| Command | Code | Argument | Driver call | Notes |
-| --- | --- | --- | --- | --- |
-| Start, O<sub>2</sub> | `0x3603` | | `StartContinuous(Gas::O2)` | Gas 0 |
-| Start, air | `0x3608` | | `StartContinuous(Gas::Air)` | Gas 1 |
-| Start, N<sub>2</sub>O | `0x3615` | | `StartContinuous(Gas::N2O)` | Gas 2, SFM4300-20 only |
-| Start, CO<sub>2</sub> | `0x361E` | | `StartContinuous(Gas::CO2)` | Gas 3, SFM4300-20 only |
-| Start, air / O<sub>2</sub> | `0x3632` | O<sub>2</sub> ‰ | `StartContinuous(Gas::AirO2Mix, o2)` | Mixture 0 |
-| Start, N<sub>2</sub>O / O<sub>2</sub> | `0x3639` | O<sub>2</sub> ‰ | `StartContinuous(Gas::N2OO2Mix, o2)` | Mixture 1, SFM4300-20 only |
-| Start, CO<sub>2</sub> / O<sub>2</sub> | `0x3646` | O<sub>2</sub> ‰ | `StartContinuous(Gas::CO2O2Mix, o2)` | Mixture 2, SFM4300-20 only |
-| Transmit concentration | `0xE17D` | O<sub>2</sub> ‰ | `UpdateConcentration()` | While measuring; then reset the pointer |
-| Reset I2C address pointer | `0xE000` | | `UpdateConcentration()` | Back to the result buffer |
-| Stop continuous measurement | `0x3FF9` | | `Stop()` | Idle after up to 0.5 ms |
-| Configure averaging | `0x366A` | N | `ConfigureAveraging()` | Idle only; 0 = average-until-read, 1 to 128 = fixed N |
-| Read scale factor, offset, unit | `0x3661` | start code | `ReadScaleOffsetUnit()` | Idle only; three words back |
-| Enter sleep | `0x3677` | | `EnterSleep()` | Idle only |
-| Exit sleep | (address + W) | | `ExitSleep()` | Not acknowledged; poll until the address ACKs (typically 16 ms) |
-| Read product identifier | `0xE102` | | `ReadProductIdentifier()` | Idle only; six words back |
-| Soft reset | `0x06` to address `0x00` | | `SoftReset()` | General call; about 16 ms, 20 ms maximum |
+| Code | Command (argument) | Driver call, notes |
+| --- | --- | --- |
+| `0x3603` | Start, O<sub>2</sub> | `StartContinuous(Gas::O2)` |
+| `0x3608` | Start, air | `StartContinuous(Gas::Air)` |
+| `0x3615` | Start, N<sub>2</sub>O | `StartContinuous(Gas::N2O)`; SFM4300-20 only |
+| `0x361E` | Start, CO<sub>2</sub> | `StartContinuous(Gas::CO2)`; SFM4300-20 only |
+| `0x3632` | Start, air / O<sub>2</sub> (O<sub>2</sub> ‰) | `StartContinuous(Gas::AirO2Mix, o2)` |
+| `0x3639` | Start, N<sub>2</sub>O / O<sub>2</sub> (O<sub>2</sub> ‰) | `StartContinuous(Gas::N2OO2Mix, o2)`; SFM4300-20 only |
+| `0x3646` | Start, CO<sub>2</sub> / O<sub>2</sub> (O<sub>2</sub> ‰) | `StartContinuous(Gas::CO2O2Mix, o2)`; SFM4300-20 only |
+| `0xE17D` | Transmit concentration (O<sub>2</sub> ‰) | `UpdateConcentration()`; while measuring |
+| `0xE000` | Reset I2C address pointer | `UpdateConcentration()`, after `0xE17D` |
+| `0x3FF9` | Stop continuous measurement | `Stop()`; idle after up to 0.5 ms |
+| `0x366A` | Configure averaging (N) | `ConfigureAveraging()`; idle only; 0 = average-until-read, 1 to 128 = fixed N |
+| `0x3661` | Read scale factor, offset, unit (start code) | `ReadScaleOffsetUnit()`; idle only; three words back |
+| `0x3677` | Enter sleep | `EnterSleep()`; idle only |
+| (address + W) | Exit sleep | `ExitSleep()`; not acknowledged, poll until the address ACKs (typically 16 ms) |
+| `0xE102` | Read product identifier | `ReadProductIdentifier()`; idle only; six words back |
+| `0x06` to `0x00` | Soft reset (general call) | `SoftReset()`; about 16 ms, 20 ms maximum |
 
 Codes `0x3624` and `0x362F` are reserved on the SFM4300. While a continuous measurement runs, the sensor accepts
 only stop, soft reset and the two concentration commands: stop it before anything else.
@@ -55,10 +55,11 @@ unsigned. A read header while no new sample exists is NACKed (`DriverError::NoDa
 The sensor reports raw counts. The physical value is `(raw - offset) / scale`, with the scale factor and offset of
 the gas table in use:
 
-| Signal | SFM4300-20 | SFM4300-50 | Unit |
+| Signal | Scale factor | Offset | Unit |
 | --- | --- | --- | --- |
-| Flow, every calibrated gas and mixture | scale 2500, offset -28672 | scale 1000, offset -28672 (O<sub>2</sub>, air, air/O<sub>2</sub>) | slm |
-| Temperature | scale 200, offset 0 | scale 200, offset 0 | °C |
+| Flow, SFM4300-20 (every gas and mixture) | 2500 | -28672 | slm |
+| Flow, SFM4300-50 (O<sub>2</sub>, air, air/O<sub>2</sub>) | 1000 | -28672 | slm |
+| Temperature | 200 | 0 | °C |
 
 The driver does not hard-code the flow scaling: `StartContinuous()` reads it from the sensor (`0x3661`) for the
 gas you start, and `ReadMeasurement()` applies it. The temperature scale (200 per °C) is a constant,
@@ -82,9 +83,16 @@ The third word of each measurement frame.
 
 </div>
 
-| Start code | `0x3603` | `0x3608` | `0x3615` | `0x361E` | `0x3624` | `0x362F` | `0x3632` | `0x3639` | `0x3646` |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Bits 15:12 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+| Bits 15:12 | Start code | Measurement |
+| --- | --- | --- |
+| 0 | `0x3603` | O<sub>2</sub> |
+| 1 | `0x3608` | Air |
+| 2 | `0x3615` | N<sub>2</sub>O |
+| 3 | `0x361E` | CO<sub>2</sub> |
+| 4, 5 | `0x3624`, `0x362F` | Reserved |
+| 6 | `0x3632` | Air / O<sub>2</sub> |
+| 7 | `0x3639` | N<sub>2</sub>O / O<sub>2</sub> |
+| 8 | `0x3646` | CO<sub>2</sub> / O<sub>2</sub> |
 
 `sfm::StatusWord` decodes the fields: `command_nibble()`, `exponential_smoothing()`, `fixed_n_averaging()`,
 `gas_fraction_permille()` and `pure_gas()`.

@@ -12,25 +12,25 @@ their own addresses, connectors and ratings: check their datasheets.
 
 A JST NSH connector, 6 circuits, 1.0 mm pitch (board part BM06B-NSHSS-TBT).
 
-| Pin | Name | Direction (sensor) | Notes |
-| --- | --- | --- | --- |
-| 1 | ADDR | in | Address select: open or GND, or a resistor to GND. Never connect it to VDD |
-| 2 | SDA | in / out | I2C data; needs a pull-up |
-| 3 | GND | | Ground |
-| 4 | VDD | | Supply, 3.0 V to 5.5 V |
-| 5 | SCL | in | I2C clock; needs a pull-up |
-| 6 | IRQn | out | Active low: a sample is ready (or the sensor was reset). Leave it unconnected if unused |
+| Pin | Name | Notes |
+| --- | --- | --- |
+| 1 | ADDR | Input: address select, open or GND, or a resistor to GND. Never connect it to VDD |
+| 2 | SDA | I2C data; needs a pull-up |
+| 3 | GND | Ground |
+| 4 | VDD | Supply, 3.0 V to 5.5 V |
+| 5 | SCL | I2C clock; needs a pull-up |
+| 6 | IRQn | Output, active low: a sample is ready (or the sensor was reset). Leave it unconnected if unused |
 
 ## I2C address
 
 The ADDR pin selects one of four 7-bit addresses. Resistor tolerance must be ±5 % or better.
 
-| ADDR | Address | Driver constant |
+| ADDR | Address | `sfm::addr::` |
 | --- | --- | --- |
-| GND or open | `0x2A` | `sfm::addr::kSfm4300Default` |
-| 1.2 kΩ to GND | `0x2B` | `sfm::addr::kSfm4300Alt1` |
-| 2.7 kΩ to GND | `0x2C` | `sfm::addr::kSfm4300Alt2` |
-| 5.6 kΩ to GND | `0x2D` | `sfm::addr::kSfm4300Alt3` |
+| GND or open | `0x2A` | `kSfm4300Default` |
+| 1.2 kΩ to GND | `0x2B` | `kSfm4300Alt1` |
+| 2.7 kΩ to GND | `0x2C` | `kSfm4300Alt2` |
+| 5.6 kΩ to GND | `0x2D` | `kSfm4300Alt3` |
 
 Default addresses of the other parts the driver knows: SFM3003 `0x28`, SFM3119 `0x29`, SFM3019 `0x2E`, SFM3013
 `0x2F`, SFM6000D `0x24` (`sfm::addr`). The soft reset uses the general-call address `0x00`.
@@ -66,26 +66,26 @@ sequenceDiagram
 
 ## Timing
 
-| Parameter | Typical | Maximum | Driver |
-| --- | --- | --- | --- |
-| Power-up until the sensor answers | 16 ms | 20 ms | Not waited for: power the sensor before the first call |
-| Soft reset or exit sleep until ready | 16 ms | 20 ms | `SoftReset()` waits 20 ms; `ExitSleep()` polls up to 20 ms |
-| First result after a start command | 12 ms | | `StartContinuous()` waits 12 ms |
-| Warm-up for an accurate result (includes the 12 ms) | 30 ms | | Discard readings in the first 30 ms |
-| Stop until the next command is accepted | | 0.5 ms | Not waited for: wait before the next command |
-| Settling after a change of gas | 70 ms | | |
-| Flow update rate, no averaging | 2000 Hz (1800 to 2200) | | |
-| Temperature update rate | 90 Hz (80 to 100) | | |
+| Parameter | Time | What the driver does |
+| --- | --- | --- |
+| Power-up until the sensor answers | 16 ms typ., 20 ms max. | Nothing: power the sensor before the first call |
+| Soft reset or exit sleep until ready | 16 ms typ., 20 ms max. | `SoftReset()` waits 20 ms; `ExitSleep()` polls for up to 20 ms |
+| First result after a start command | 12 ms | `StartContinuous()` waits 12 ms |
+| Warm-up for an accurate result | 30 ms typ. (includes the 12 ms) | Nothing: discard readings in the first 30 ms |
+| Stop until the next command | 0.5 ms max. | Nothing: wait before the next command |
+| Settling after a change of gas | 70 ms typ. | |
+| Flow update rate, no averaging | 2000 Hz (1800 to 2200) | |
+| Temperature update rate | 90 Hz (80 to 100) | |
 
 ## Power
 
-| Parameter | Min | Typical | Max | Notes |
-| --- | --- | --- | --- | --- |
-| Supply voltage VDD | 3.0 V | 3.3 V | 5.5 V | Calibrated at 3.3 V; 3.3 V ±5 % is recommended |
-| Power-up / power-down threshold | 2.3 V | 2.5 V | 2.7 V | |
-| Supply current, measuring | | 4.2 mA | 5.7 mA | At VDD = 3.3 V |
-| Supply current, idle | | 0.055 mA | 0.6 mA | |
-| Supply current, sleep | | 0.4 µA | 1 µA | |
+| Parameter | Value | Notes |
+| --- | --- | --- |
+| Supply voltage VDD | 3.0 V to 5.5 V, 3.3 V typ. | Calibrated at 3.3 V; 3.3 V ±5 % is recommended |
+| Power-up / power-down threshold | 2.3 V to 2.7 V, 2.5 V typ. | |
+| Supply current, measuring | 4.2 mA typ., 5.7 mA max. | At VDD = 3.3 V |
+| Supply current, idle | 0.055 mA typ., 0.6 mA max. | |
+| Supply current, sleep | 0.4 µA typ., 1 µA max. | |
 
 Absolute maximum VDD is 5.5 V. The operating temperature range is +5 °C to +50 °C; storage -40 °C to +80 °C.
 
