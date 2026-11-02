@@ -47,4 +47,3 @@ plausible, systematically wrong flow.
 | A reading lags a step change | Average-until-read smooths exponentially when you read less often than every 64 ms (status bit 11) | Read at least every 64 ms, or use fixed-N averaging |
 | A constant offset | The sensor is not horizontal, or the line pressure is outside 0.66 bar to 7 bar absolute | Mount it horizontally with the connector up ([Hardware](hardware.md#fluidics)) |
 | The temperature differs from the gas temperature | The sensor reports its silicon temperature | Expected; insulate the sensor if you need the gas temperature |
-| The status shows the wrong mixture | `GasFromStatusNibble()` maps SF06 mixtures to 4 to 6; the datasheet uses 6 to 8 | Use `ActiveGas()` ([I2C protocol](i2c-protocol.md#status-word)) |

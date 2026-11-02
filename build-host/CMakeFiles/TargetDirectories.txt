@@ -1,0 +1,8 @@
+/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/CMakeFiles/test.dir
+/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/CMakeFiles/edit_cache.dir
+/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/CMakeFiles/rebuild_cache.dir
+/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/tests/CMakeFiles/hf_sfm_host_tests.dir
+/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/tests/CMakeFiles/hf_sfm_doc_snippets.dir
+/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/tests/CMakeFiles/test.dir
+/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/tests/CMakeFiles/edit_cache.dir
+/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/tests/CMakeFiles/rebuild_cache.dir

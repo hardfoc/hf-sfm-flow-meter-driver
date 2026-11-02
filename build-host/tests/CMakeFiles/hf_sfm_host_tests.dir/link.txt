@@ -1,0 +1,1 @@
+/usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/hf_sfm_host_tests.dir/host/sfm_driver_test.cpp.o -o hf_sfm_host_tests

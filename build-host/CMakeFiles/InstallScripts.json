@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/cmake_install.cmake",
+		"/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/tests/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

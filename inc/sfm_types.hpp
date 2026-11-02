@@ -303,7 +303,7 @@ struct Scaling {
 /**
  * @brief Decoded status word (data sheet §4.3.2, Table 5).
  *
- * bits 15:12 — currently running measurement command (0b0000 O2 … 0b0110 CO2/O2),
+ * bits 15:12 — index of the running start command (0b0000 O2 … 0b1000 CO2/O2),
  * bit 11 — exponential smoothing active (avg-until-read idle > 64 ms),
  * bit 10 — fixed-N averaging active, bits 9:0 — gas fraction (‰) or 0x3FF for pure gas.
  */
@@ -319,7 +319,28 @@ struct StatusWord {
     }
 };
 
-/// Map the status command nibble back onto a gas selector (per family).
+/**
+ * @brief Whether @p nibble (status bits 15:12) names a start command of @p family.
+ * @details SF06 (SFM4300 data sheet §4.3.2 Table 5): the nibble is the index of
+ *          the running command in the start-command table — 0 O2, 1 Air,
+ *          2 N2O, 3 CO2, 4 and 5 reserved (0x3624, 0x362F), 6 Air/O2,
+ *          7 N2O/O2, 8 CO2/O2. SFx6000: 0 to 4 pure gases, 0xA O2 in Air.
+ */
+constexpr bool StatusNibbleIsKnown(Family family, uint8_t nibble) noexcept {
+    const uint8_t n = nibble & 0x0FU;
+    if (family == Family::Sfx6000) {
+        return n <= 0x4U || n == 0xAU;
+    }
+    return n <= 0x3U || (n >= 0x6U && n <= 0x8U);
+}
+
+/**
+ * @brief Map the status command nibble back onto a gas selector (per family).
+ * @details See `StatusNibbleIsKnown()` for the tables. A reserved or unknown
+ *          nibble returns `Gas::Air`; check `StatusNibbleIsKnown()` first when
+ *          that matters. On SFM3013-300-CLM, nibbles 2 and 7 are HeOx and
+ *          HeOx/O2 (data sheet §4.3.1 Table 2): use `ActiveGas()` there.
+ */
 constexpr Gas GasFromStatusNibble(Family family, uint8_t nibble) noexcept {
     if (family == Family::Sfx6000) {
         switch (nibble & 0x0FU) {
@@ -337,12 +358,15 @@ constexpr Gas GasFromStatusNibble(Family family, uint8_t nibble) noexcept {
         case 0x1: return Gas::Air;
         case 0x2: return Gas::N2O;
         case 0x3: return Gas::CO2;
-        case 0x4: return Gas::AirO2Mix;
-        case 0x5: return Gas::N2OO2Mix;
-        case 0x6: return Gas::CO2O2Mix;
-        default:  return Gas::Air;
+        case 0x6: return Gas::AirO2Mix;
+        case 0x7: return Gas::N2OO2Mix;
+        case 0x8: return Gas::CO2O2Mix;
+        default:  return Gas::Air;  // 4, 5 reserved; 9 to 15 unused
     }
 }
+
+static_assert(GasFromStatusNibble(Family::Sf06, 0x6) == Gas::AirO2Mix,
+              "SFM4300 data sheet Table 5: Air/O2 (0x3632) reports 0b0110");
 
 /// One continuous-mode sample (data sheet §4.3.1 read frame).
 struct Measurement {

@@ -176,6 +176,29 @@ void TestAveragingStopReset() {
     CHECK(i2c.delayed_ms >= sfm::timing::kSoftResetMs);
 }
 
+/* SFM4300 datasheet section 4.3.2 Table 5 (SFM3019 Table 4): bits 15:12 are the index of the running
+ * start command in the start-command table, with 4 and 5 reserved: 0x3632 is 6, 0x3639 is 7, 0x3646 is 8. */
+void TestStatusNibbleMixtures() {
+    using sfm::Family;
+    using sfm::Gas;
+    CHECK(sfm::GasFromStatusNibble(Family::Sf06, 0x0) == Gas::O2);
+    CHECK(sfm::GasFromStatusNibble(Family::Sf06, 0x3) == Gas::CO2);
+    CHECK(sfm::GasFromStatusNibble(Family::Sf06, 0x6) == Gas::AirO2Mix);
+    CHECK(sfm::GasFromStatusNibble(Family::Sf06, 0x7) == Gas::N2OO2Mix);
+    CHECK(sfm::GasFromStatusNibble(Family::Sf06, 0x8) == Gas::CO2O2Mix);
+    CHECK(!sfm::StatusNibbleIsKnown(Family::Sf06, 0x4));
+    CHECK(!sfm::StatusNibbleIsKnown(Family::Sf06, 0x5));
+    CHECK(sfm::StatusNibbleIsKnown(Family::Sf06, 0x8));
+    CHECK(!sfm::StatusNibbleIsKnown(Family::Sf06, 0x9));
+    CHECK(sfm::StatusNibbleIsKnown(Family::Sfx6000, 0xA));
+    CHECK(!sfm::StatusNibbleIsKnown(Family::Sfx6000, 0x6));
+
+    // A running air/O2 mixture at 40 % O2 as the sensor reports it.
+    sfm::StatusWord st{static_cast<uint16_t>((0x6U << 12) | 400U)};
+    CHECK(sfm::GasFromStatusNibble(Family::Sf06, st.command_nibble()) == Gas::AirO2Mix);
+    CHECK(st.gas_fraction_permille() == 400 && !st.pure_gas());
+}
+
 // --- SFx6000 (SFM6000D) ------------------------------------------------------
 
 void TestSfx6000Identity() {
@@ -284,6 +307,7 @@ int main() {
     TestStartAndMeasure();
     TestGasGating();
     TestAveragingStopReset();
+    TestStatusNibbleMixtures();
     if (g_failures == 0) {
         std::printf("hf-sfm host tests: all passed (%s)\n", sfm::GetDriverVersion());
         return 0;

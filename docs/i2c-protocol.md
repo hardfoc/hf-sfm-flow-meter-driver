@@ -97,10 +97,10 @@ The third word of each measurement frame.
 `sfm::StatusWord` decodes the fields: `command_nibble()`, `exponential_smoothing()`, `fixed_n_averaging()`,
 `gas_fraction_permille()` and `pure_gas()`.
 
-!!! warning "Mixture codes in `GasFromStatusNibble()`"
-    For SF06 parts, `sfm::GasFromStatusNibble()` maps 4, 5 and 6 to the three mixtures. The datasheet assigns 4
-    and 5 to the reserved codes and 6, 7 and 8 to the mixtures. Pure gases (0 to 3) decode correctly. Until the
-    function is fixed, use `ActiveGas()` to know which mixture is running.
+`sfm::GasFromStatusNibble(family, nibble)` turns bits 15:12 back into an `sfm::Gas` using this table (SF06) or
+the SFx6000 one, and `sfm::StatusNibbleIsKnown(family, nibble)` tells a real code from a reserved one: a reserved
+nibble decodes as `Gas::Air`. On the SFM3013-300-CLM, 2 and 7 are HeOx and HeOx / O<sub>2</sub>; use
+`ActiveGas()` there.
 
 ## Product identifier
 

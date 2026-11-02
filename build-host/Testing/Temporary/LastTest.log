@@ -1,0 +1,19 @@
+Start testing: Nov 02 00:35 MST
+----------------------------------------------------------
+1/1 Testing: hf_sfm_host_tests
+1/1 Test: hf_sfm_host_tests
+Command: "/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/tests/hf_sfm_host_tests"
+Directory: /Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/tests
+"hf_sfm_host_tests" start time: Nov 02 00:35 MST
+Output:
+----------------------------------------------------------
+hf-sfm host tests: all passed (1.0.0)
+<end of output>
+Test time =   0.13 sec
+----------------------------------------------------------
+Test Passed.
+"hf_sfm_host_tests" end time: Nov 02 00:35 MST
+"hf_sfm_host_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 02 00:35 MST
