@@ -35,11 +35,15 @@ extern "C" void app_main(void) {
                              : sfm::Gas::Air;
     ESP_LOGI(TAG, "variant %s → gas table %s", sfm::ToString(variant).data(), sfm::ToString(gas).data());
 
+    /* Averaging is accepted in idle mode only (SFM4300 datasheet §4.3.5): configure it before the start. */
+    if (!dev.ConfigureAveraging(4).ok()) {
+        ESP_LOGE(TAG, "averaging failed");
+        return;
+    }
     if (!dev.StartContinuous(gas).ok()) {
         ESP_LOGE(TAG, "start failed");
         return;
     }
-    (void)dev.ConfigureAveraging(4);
 
     float sum = 0.0f, mn = FLT_MAX, mx = -FLT_MAX;
     int n = 0, nodata = 0, crc = 0;

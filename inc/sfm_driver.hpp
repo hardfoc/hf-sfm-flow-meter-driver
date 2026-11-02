@@ -16,8 +16,8 @@
  *          @code
  *          sfm::Driver<MyI2c> dev(i2c, sfm::addr::kSfm4300Default);
  *          auto id = dev.ReadProductIdentifier();          // idle mode only
+ *          dev.ConfigureAveraging(0);                      // idle only: average-until-read
  *          dev.StartContinuous(sfm::Gas::CO2);             // reads scaling first
- *          dev.ConfigureAveraging(0);                      // average-until-read
  *          auto m = dev.ReadMeasurement();                 // every ≥0.5 ms
  *          @endcode
  *
