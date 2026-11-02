@@ -1,3 +1,0 @@
-hf_sfm_host_tests 3 0.000523833
-hf_sfm_install_consumer 1 0.652194
----

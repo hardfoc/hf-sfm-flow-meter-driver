@@ -1,9 +1,0 @@
-/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/include/hf_sfm/sfm_i2c_interface.hpp
-/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/include/hf_sfm/sfm_types.hpp
-/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/include/hf_sfm/sfm.hpp
-/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/include/hf_sfm/sfm_commands.hpp
-/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/include/hf_sfm/sfm_driver.hpp
-/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/include/hf_sfm/sfm_version.h
-/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/lib/cmake/hf_sfm/hf_sfmTargets.cmake
-/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/lib/cmake/hf_sfm/hf_sfmConfig.cmake
-/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/lib/cmake/hf_sfm/hf_sfmConfigVersion.cmake
