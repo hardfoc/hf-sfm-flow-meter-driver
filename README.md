@@ -1,11 +1,3 @@
----
-layout: default
-title: "HardFOC SFM Flow Meter Driver"
-description: "Hardware-agnostic C++17 I2C driver for Sensirion SFM4300 / SF06-family gas mass flow meters"
-nav_order: 1
-permalink: /
----
-
 # HF-SFM Flow Meter Driver
 
 **Header-only C++17 I²C driver for Sensirion SF06-family gas mass flow meters**

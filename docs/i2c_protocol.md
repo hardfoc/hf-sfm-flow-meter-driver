@@ -1,11 +1,3 @@
----
-layout: default
-title: "I²C protocol"
-nav_order: 3
-parent: "Documentation"
-permalink: /docs/i2c-protocol/
----
-
 # I²C protocol (SF06 command set)
 
 Source: SFM4300 data sheet §4. All values in `inc/sfm_commands.hpp`.

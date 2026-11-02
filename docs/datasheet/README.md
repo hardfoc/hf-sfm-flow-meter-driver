@@ -1,11 +1,3 @@
----
-layout: default
-title: "Datasheets and links"
-nav_order: 9
-parent: "Documentation"
-permalink: /docs/datasheet/
----
-
 # Datasheets (local copies)
 
 Place vendor PDFs here (Sensirion **SFM4300** data sheet; SFM3003 / SFM3013 /
