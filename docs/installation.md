@@ -37,6 +37,26 @@ generated `sfm_version.h`, and requires C++17 (`cxx_std_17`).
 | `HF_SFM_ENABLE_WARNINGS` | `OFF` | Adds `-Wall -Wextra -Wpedantic` to targets that link `hf::sfm` |
 | `HF_SFM_BUILD_TESTS` | `OFF` | Builds the host unit tests and the documentation snippets in `tests/` ([Testing and CI](testing.md)) |
 
+### Install and `find_package`
+
+```bash
+cmake -S external/hf-sfm-flow-meter-driver -B build-sfm
+cmake --install build-sfm --prefix /opt/hardfoc
+```
+
+This installs the headers and `sfm_version.h` under `include/hf_sfm/` and the package files under
+`lib/cmake/hf_sfm/`. A project then finds it with `CMAKE_PREFIX_PATH` pointing at the prefix:
+
+```cmake
+find_package(hf_sfm 1.0 REQUIRED CONFIG)
+target_link_libraries(my_app PRIVATE hf::sfm)
+```
+
+The host build checks this: the `hf_sfm_install_consumer` test installs into a scratch prefix and builds a
+consumer against it.
+
+### Settings file only
+
 Without `add_subdirectory`, include the build settings and use their include list:
 
 ```cmake
@@ -58,7 +78,7 @@ the driver checkout; the wrapper stops with a clear message when the path is wro
 | Layer | File | Role |
 | --- | --- | --- |
 | Settings | [`cmake/hf_sfm_build_settings.cmake`](../cmake/hf_sfm_build_settings.cmake) | Include directories, version, generated header: the single source of truth |
-| Library | [`CMakeLists.txt`](../CMakeLists.txt) | `INTERFACE` target `hf::sfm`, tests option, package config |
+| Library | [`CMakeLists.txt`](../CMakeLists.txt) | `INTERFACE` target `hf::sfm`, tests option, install rules and package config |
 | ESP-IDF | [`examples/esp32/components/hf_sfm/CMakeLists.txt`](../examples/esp32/components/hf_sfm/CMakeLists.txt) | IDF component wrapper over the same settings |
 
 The version is set once in the settings file and written into `sfm_version.h` at configure time. Read it at run

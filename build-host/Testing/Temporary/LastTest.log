@@ -1,19 +1,58 @@
-Start testing: Nov 02 00:35 MST
+Start testing: Nov 02 00:40 MST
 ----------------------------------------------------------
-1/1 Testing: hf_sfm_host_tests
-1/1 Test: hf_sfm_host_tests
+1/2 Testing: hf_sfm_host_tests
+1/2 Test: hf_sfm_host_tests
 Command: "/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/tests/hf_sfm_host_tests"
 Directory: /Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/tests
-"hf_sfm_host_tests" start time: Nov 02 00:35 MST
+"hf_sfm_host_tests" start time: Nov 02 00:40 MST
 Output:
 ----------------------------------------------------------
 hf-sfm host tests: all passed (1.0.0)
 <end of output>
-Test time =   0.13 sec
+Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"hf_sfm_host_tests" end time: Nov 02 00:35 MST
+"hf_sfm_host_tests" end time: Nov 02 00:40 MST
 "hf_sfm_host_tests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Nov 02 00:35 MST
+2/2 Testing: hf_sfm_install_consumer
+2/2 Test: hf_sfm_install_consumer
+Command: "/opt/homebrew/bin/cmake" "-DBUILD_DIR=/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host" "-DSOURCE_DIR=/Users/nebex/w/dq3/hf-sfm-flow-meter-driver" "-DCXX_COMPILER=/usr/bin/c++" "-P" "/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/tests/install/run_install_test.cmake"
+Directory: /Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/tests
+"hf_sfm_install_consumer" start time: Nov 02 00:40 MST
+Output:
+----------------------------------------------------------
+-- Install configuration: ""
+-- Installing: /Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/include/hf_sfm
+-- Installing: /Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/include/hf_sfm/sfm_i2c_interface.hpp
+-- Installing: /Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/include/hf_sfm/sfm_types.hpp
+-- Installing: /Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/include/hf_sfm/sfm.hpp
+-- Installing: /Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/include/hf_sfm/sfm_commands.hpp
+-- Installing: /Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/include/hf_sfm/sfm_driver.hpp
+-- Installing: /Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/include/hf_sfm/sfm_version.h
+-- Installing: /Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/lib/cmake/hf_sfm/hf_sfmTargets.cmake
+-- Installing: /Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/lib/cmake/hf_sfm/hf_sfmConfig.cmake
+-- Installing: /Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/prefix/lib/cmake/hf_sfm/hf_sfmConfigVersion.cmake
+-- The CXX compiler identification is AppleClang 17.0.0.17000013
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/install-test/consumer
+[ 50%] Building CXX object CMakeFiles/consumer.dir/main.cpp.o
+[100%] Linking CXX executable consumer
+[100%] Built target consumer
+1.0.0 SFM3019
+<end of output>
+Test time =   0.65 sec
+----------------------------------------------------------
+Test Passed.
+"hf_sfm_install_consumer" end time: Nov 02 00:40 MST
+"hf_sfm_install_consumer" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 02 00:40 MST

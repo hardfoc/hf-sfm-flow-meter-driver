@@ -31,3 +31,11 @@ target_link_libraries(hf_sfm_doc_snippets PRIVATE hf::sfm)
 target_include_directories(hf_sfm_doc_snippets PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/docs)
 target_compile_features(hf_sfm_doc_snippets PRIVATE cxx_std_17)
 target_compile_options(hf_sfm_doc_snippets PRIVATE -Wall -Wextra -Wpedantic)
+
+# The install rules: install into a scratch prefix and build a find_package(hf_sfm) consumer against it.
+add_test(NAME hf_sfm_install_consumer
+  COMMAND ${CMAKE_COMMAND}
+    -DBUILD_DIR=${PROJECT_BINARY_DIR}
+    -DSOURCE_DIR=${PROJECT_SOURCE_DIR}
+    -DCXX_COMPILER=${CMAKE_CXX_COMPILER}
+    -P ${CMAKE_CURRENT_SOURCE_DIR}/install/run_install_test.cmake)

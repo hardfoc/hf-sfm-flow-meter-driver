@@ -42,6 +42,41 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/tests/cmake_install.cmake")
 endif()
 
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/hf_sfm" TYPE DIRECTORY FILES "/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/inc/" FILES_MATCHING REGEX "/[^/]*\\.hpp$")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/hf_sfm" TYPE FILE FILES "/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/hf_sfm_generated/sfm_version.h")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/hf_sfm/hf_sfmTargets.cmake")
+    file(DIFFERENT _cmake_export_file_changed FILES
+         "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/hf_sfm/hf_sfmTargets.cmake"
+         "/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/CMakeFiles/Export/947307eea8f05af5ed2f8ef5953e0a25/hf_sfmTargets.cmake")
+    if(_cmake_export_file_changed)
+      file(GLOB _cmake_old_config_files "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/hf_sfm/hf_sfmTargets-*.cmake")
+      if(_cmake_old_config_files)
+        string(REPLACE ";" ", " _cmake_old_config_files_text "${_cmake_old_config_files}")
+        message(STATUS "Old export file \"$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/hf_sfm/hf_sfmTargets.cmake\" will be replaced.  Removing files [${_cmake_old_config_files_text}].")
+        unset(_cmake_old_config_files_text)
+        file(REMOVE ${_cmake_old_config_files})
+      endif()
+      unset(_cmake_old_config_files)
+    endif()
+    unset(_cmake_export_file_changed)
+  endif()
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/hf_sfm" TYPE FILE FILES "/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/CMakeFiles/Export/947307eea8f05af5ed2f8ef5953e0a25/hf_sfmTargets.cmake")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/hf_sfm" TYPE FILE FILES
+    "/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/hf_sfmConfig.cmake"
+    "/Users/nebex/w/dq3/hf-sfm-flow-meter-driver/build-host/hf_sfmConfigVersion.cmake"
+    )
+endif()
+
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)

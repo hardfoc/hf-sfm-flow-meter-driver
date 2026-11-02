@@ -25,6 +25,6 @@ endmacro()
 ####################################################################################
 
 include("${CMAKE_CURRENT_LIST_DIR}/hf_sfmConfigVersion.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/hf_sfmTargets.cmake" OPTIONAL)
+include("${CMAKE_CURRENT_LIST_DIR}/hf_sfmTargets.cmake")
 
 check_required_components(hf_sfm)
