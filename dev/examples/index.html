@@ -105,6 +105,47 @@
   <meta property="og:description" content="Header-only C++17 driver for Sensirion SF06-family gas mass flow meters such as the SFM4300 (I2C): gas and mixture measurement, CRC-checked reads, averaging, sleep and product identification.">
   <meta property="og:url" content="https://hardfoc.github.io/hf-sfm-flow-meter-driver/latest/examples/">
   <meta name="twitter:card" content="summary">
+  <script>
+(function () {
+  if (typeof mermaid != "undefined" && !(mermaid instanceof Element)) return;
+  var SRC = "https://unpkg.com/mermaid@11/dist/mermaid.min.js", config = {}, real, loading, waiting = [];
+  var stub = {
+    initialize: function (c) { config = c || {}; if (real) real.initialize(config); },
+    render: function (id, text) {
+      var el = null, pres = document.querySelectorAll("pre.mermaid:not([data-hf-mermaid])");
+      for (var i = 0; i < pres.length && !el; i++) if (pres[i].textContent === text) el = pres[i];
+      if (el) el.setAttribute("data-hf-mermaid", "");
+      return near(el).then(load).then(function (m) { return m.render(id, text); });
+    }
+  };
+  function load() {
+    return loading || (loading = new Promise(function (resolve, reject) {
+      var s = document.createElement("script");
+      s.src = SRC;
+      s.onload = function () {
+        real = window.mermaid;
+        window.mermaid = stub;
+        real.initialize(config);
+        resolve(real);
+      };
+      s.onerror = function () { loading = null; reject(new Error("Mermaid did not load")); };
+      document.head.appendChild(s);
+    }));
+  }
+  function near(el) {
+    if (real || !el || !("IntersectionObserver" in window)) return Promise.resolve();
+    return new Promise(function (resolve) {
+      var io = new IntersectionObserver(function (entries) {
+        if (entries.some(function (e) { return e.isIntersecting; })) { io.disconnect(); resolve(); }
+      }, { rootMargin: "100% 0px" });
+      io.observe(el);
+      waiting.push(function () { io.disconnect(); resolve(); });
+    });
+  }
+  window.addEventListener("beforeprint", function () { waiting.splice(0).forEach(function (go) { go(); }); });
+  window.mermaid = stub;
+})();
+</script>
 
   </head>
   
@@ -1023,7 +1064,7 @@
 <p>Complete ESP32-S3 applications that read an SFM4300 with the driver, from a one-frame-per-second minimum to a
 500 Hz loop with statistics.</p>
 <p>They run on an ESP32-S3 with the sensor on I2C0 (SDA GPIO 8, SCL GPIO 9, 400 kHz, address 0x2A); the port is
-<a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/f81b925f6b0b202fe26333430fd0e02acb90f4d6/examples/esp32/main/include/hf_sfm_esp_i2c.hpp"><code>hf_sfm_esp_i2c.hpp</code></a>. CI builds every app below on each pull
+<a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/ce451bfd47ef2a9b1a85b063e6220152902e06d1/examples/esp32/main/include/hf_sfm_esp_i2c.hpp"><code>hf_sfm_esp_i2c.hpp</code></a>. CI builds every app below on each pull
 request.</p>
 <h2 id="the-apps">The apps<a class="headerlink" href="#the-apps" title="Permanent link">&para;</a></h2>
 <!-- generated: examples -->
@@ -1040,13 +1081,13 @@ request.</p>
 <tr>
 <td><code>sfm_minimal_example</code> <span class="twemoji" title="featured"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.45 4.73L5.82 21z"/></svg></span></td>
 <td>Soft reset, product identifier, air table, one flow / temperature / status frame per second</td>
-<td><a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/f81b925f6b0b202fe26333430fd0e02acb90f4d6/examples/esp32/main/sfm_minimal_example.cpp"><code>sfm_minimal_example.cpp</code></a></td>
+<td><a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/ce451bfd47ef2a9b1a85b063e6220152902e06d1/examples/esp32/main/sfm_minimal_example.cpp"><code>sfm_minimal_example.cpp</code></a></td>
 <td>yes</td>
 </tr>
 <tr>
 <td><code>sfm_flow_demo</code> <span class="twemoji" title="featured"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.45 4.73L5.82 21z"/></svg></span></td>
 <td>500 Hz poll with fixed-N averaging, CO2 table when the variant has it, else air; 1 s statistics</td>
-<td><a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/f81b925f6b0b202fe26333430fd0e02acb90f4d6/examples/esp32/main/sfm_flow_demo.cpp"><code>sfm_flow_demo.cpp</code></a></td>
+<td><a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/ce451bfd47ef2a9b1a85b063e6220152902e06d1/examples/esp32/main/sfm_flow_demo.cpp"><code>sfm_flow_demo.cpp</code></a></td>
 <td>yes</td>
 </tr>
 </tbody>
@@ -1055,7 +1096,7 @@ request.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>./scripts/build_app.sh<span class="w"> </span>sfm_minimal_example<span class="w"> </span>Release
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>./scripts/flash_app.sh<span class="w"> </span>flash_monitor<span class="w"> </span>sfm_minimal_example<span class="w"> </span>Release
 </span></code></pre></div>
-<p>Source of this table: <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/f81b925f6b0b202fe26333430fd0e02acb90f4d6/examples/esp32/app_config.yml"><code>examples/esp32/app_config.yml</code></a>.</p>
+<p>Source of this table: <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/ce451bfd47ef2a9b1a85b063e6220152902e06d1/examples/esp32/app_config.yml"><code>examples/esp32/app_config.yml</code></a>.</p>
 <!-- /generated -->
 
 <h2 id="set-up-once">Set up once<a class="headerlink" href="#set-up-once" title="Permanent link">&para;</a></h2>
@@ -1064,7 +1105,7 @@ request.</p>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>.<span class="w"> </span><span class="nv">$IDF_PATH</span>/export.sh<span class="w">                                 </span><span class="c1"># ESP-IDF v5.5</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>./scripts/build_app.sh<span class="w"> </span>list<span class="w">                           </span><span class="c1"># every app and build type</span>
 </span></code></pre></div>
-<p>The scripts read <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/f81b925f6b0b202fe26333430fd0e02acb90f4d6/examples/esp32/app_config.yml"><code>app_config.yml</code></a> (the same file this page's table comes
+<p>The scripts read <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/ce451bfd47ef2a9b1a85b063e6220152902e06d1/examples/esp32/app_config.yml"><code>app_config.yml</code></a> (the same file this page's table comes
 from) and build each app as its own firmware image.</p>
 <h2 id="what-to-read-in-an-example">What to read in an example<a class="headerlink" href="#what-to-read-in-an-example" title="Permanent link">&para;</a></h2>
 <table>
@@ -1093,7 +1134,7 @@ from) and build each app as its own firmware image.</p>
 </tr>
 </tbody>
 </table>
-<p>The <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/f81b925f6b0b202fe26333430fd0e02acb90f4d6/examples/esp32/README.md">example folder's README</a> has the wiring and the build commands.</p>
+<p>The <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/ce451bfd47ef2a9b1a85b063e6220152902e06d1/examples/esp32/README.md">example folder's README</a> has the wiring and the build commands.</p>
 
 
 

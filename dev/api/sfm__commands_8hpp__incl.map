@@ -1,7 +1,0 @@
-<map id="inc/sfm_commands.hpp" name="inc/sfm_commands.hpp">
-<area shape="rect" id="Node000001" title="I2C command codes, addresses, timing and CRC&#45;8 for Sensirion flow meters: the SF06 family (SFM4300 da..." alt="" coords="5,5,183,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="12,79,83,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,32,65,69,60,66,84,30"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="107,79,174,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,30,128,66,123,69,99,32"/>
-</map>

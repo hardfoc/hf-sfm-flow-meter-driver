@@ -105,6 +105,47 @@
   <meta property="og:description" content="Header-only C++17 driver for Sensirion SF06-family gas mass flow meters such as the SFM4300 (I2C): gas and mixture measurement, CRC-checked reads, averaging, sleep and product identification.">
   <meta property="og:url" content="https://hardfoc.github.io/hf-sfm-flow-meter-driver/latest/architecture/">
   <meta name="twitter:card" content="summary">
+  <script>
+(function () {
+  if (typeof mermaid != "undefined" && !(mermaid instanceof Element)) return;
+  var SRC = "https://unpkg.com/mermaid@11/dist/mermaid.min.js", config = {}, real, loading, waiting = [];
+  var stub = {
+    initialize: function (c) { config = c || {}; if (real) real.initialize(config); },
+    render: function (id, text) {
+      var el = null, pres = document.querySelectorAll("pre.mermaid:not([data-hf-mermaid])");
+      for (var i = 0; i < pres.length && !el; i++) if (pres[i].textContent === text) el = pres[i];
+      if (el) el.setAttribute("data-hf-mermaid", "");
+      return near(el).then(load).then(function (m) { return m.render(id, text); });
+    }
+  };
+  function load() {
+    return loading || (loading = new Promise(function (resolve, reject) {
+      var s = document.createElement("script");
+      s.src = SRC;
+      s.onload = function () {
+        real = window.mermaid;
+        window.mermaid = stub;
+        real.initialize(config);
+        resolve(real);
+      };
+      s.onerror = function () { loading = null; reject(new Error("Mermaid did not load")); };
+      document.head.appendChild(s);
+    }));
+  }
+  function near(el) {
+    if (real || !el || !("IntersectionObserver" in window)) return Promise.resolve();
+    return new Promise(function (resolve) {
+      var io = new IntersectionObserver(function (entries) {
+        if (entries.some(function (e) { return e.isIntersecting; })) { io.disconnect(); resolve(); }
+      }, { rootMargin: "100% 0px" });
+      io.observe(el);
+      waiting.push(function () { io.disconnect(); resolve(); });
+    });
+  }
+  window.addEventListener("beforeprint", function () { waiting.splice(0).forEach(function (go) { go(); }); });
+  window.mermaid = stub;
+})();
+</script>
 
   </head>
   
@@ -1060,14 +1101,14 @@
 <h1 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h1>
 <p>How the driver is put together: three layers, what each owns, and how one call reaches the sensor.</p>
 <figure class="hf-figure">
-<img src="../diagrams/driver-layers.svg#only-light" alt="Layer diagram: the application calls the hardware-agnostic sfm::Driver and its commands, which use the CRTP I2C interface, which calls the platform port you write, which drives the I2C bus of the Sensirion SFM4300 or another SF06-family flow meter." width="1200" loading="lazy"><img src="../diagrams/driver-layers.dark.svg#only-dark" alt="Layer diagram: the application calls the hardware-agnostic sfm::Driver and its commands, which use the CRTP I2C interface, which calls the platform port you write, which drives the I2C bus of the Sensirion SFM4300 or another SF06-family flow meter." width="1200" loading="lazy">
+<img src="../diagrams/driver-layers.svg#only-light" alt="Layer diagram: the application calls the hardware-agnostic sfm::Driver and its commands, which use the CRTP I2C interface, which calls the platform port you write, which drives the I2C bus of the Sensirion SFM4300 or another SF06-family flow meter." width="1200" height="898"><img src="../diagrams/driver-layers.dark.svg#only-dark" alt="Layer diagram: the application calls the hardware-agnostic sfm::Driver and its commands, which use the CRTP I2C interface, which calls the platform port you write, which drives the I2C bus of the Sensirion SFM4300 or another SF06-family flow meter." width="1200" height="898">
 <figcaption>Three layers, one of them yours</figcaption>
 </figure>
 
 <details class="hf-figure-desc">
 <summary>Figure description and sources</summary>
 <p>From top to bottom. Your application talks to one sfm::Driver<I2c> object per sensor, whose public commands are listed from inc/sfm_driver.hpp. The core turns each call into 16-bit SF06 commands, checks the CRC-8 of every word it reads and converts raw counts with the scaling the sensor reported. The communication interface (sfm::I2cInterface in inc/sfm_i2c_interface.hpp) is a CRTP base: four methods are required, general call is optional. The platform port is the only code you write. Below it is the sensor.</p>
-<p>Drawn from: <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/f81b925f6b0b202fe26333430fd0e02acb90f4d6/inc/sfm_driver.hpp"><code>inc/sfm_driver.hpp</code></a> <code>Driver public commands</code>; <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/f81b925f6b0b202fe26333430fd0e02acb90f4d6/inc/sfm_i2c_interface.hpp"><code>inc/sfm_i2c_interface.hpp</code></a> <code>I2cInterface</code>; figure module <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/f81b925f6b0b202fe26333430fd0e02acb90f4d6/docs/diagrams/figures/driver-layers.py"><code>docs/diagrams/figures/driver-layers.py</code></a>.</p>
+<p>Drawn from: <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/ce451bfd47ef2a9b1a85b063e6220152902e06d1/inc/sfm_driver.hpp"><code>inc/sfm_driver.hpp</code></a> <code>Driver public commands</code>; <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/ce451bfd47ef2a9b1a85b063e6220152902e06d1/inc/sfm_i2c_interface.hpp"><code>inc/sfm_i2c_interface.hpp</code></a> <code>I2cInterface</code>; figure module <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/ce451bfd47ef2a9b1a85b063e6220152902e06d1/docs/diagrams/figures/driver-layers.py"><code>docs/diagrams/figures/driver-layers.py</code></a>.</p>
 </details>
 <h2 id="the-three-layers">The three layers<a class="headerlink" href="#the-three-layers" title="Permanent link">&para;</a></h2>
 <table>
@@ -1082,13 +1123,13 @@
 <tbody>
 <tr>
 <td><strong>Hardware-agnostic core</strong>: <code>sfm::Driver&lt;I2cT&gt;</code></td>
-<td><a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/f81b925f6b0b202fe26333430fd0e02acb90f4d6/inc/sfm_driver.hpp"><code>inc/sfm_driver.hpp</code></a>, <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/f81b925f6b0b202fe26333430fd0e02acb90f4d6/inc/sfm_types.hpp"><code>inc/sfm_types.hpp</code></a>, <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/f81b925f6b0b202fe26333430fd0e02acb90f4d6/inc/sfm_commands.hpp"><code>inc/sfm_commands.hpp</code></a></td>
+<td><a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/ce451bfd47ef2a9b1a85b063e6220152902e06d1/inc/sfm_driver.hpp"><code>inc/sfm_driver.hpp</code></a>, <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/ce451bfd47ef2a9b1a85b063e6220152902e06d1/inc/sfm_types.hpp"><code>inc/sfm_types.hpp</code></a>, <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/ce451bfd47ef2a9b1a85b063e6220152902e06d1/inc/sfm_commands.hpp"><code>inc/sfm_commands.hpp</code></a></td>
 <td>The interface's methods only</td>
 <td>Never, for a new board</td>
 </tr>
 <tr>
 <td><strong>Communication interface</strong>: <code>sfm::I2cInterface&lt;Derived&gt;</code></td>
-<td><a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/f81b925f6b0b202fe26333430fd0e02acb90f4d6/inc/sfm_i2c_interface.hpp"><code>inc/sfm_i2c_interface.hpp</code></a></td>
+<td><a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/ce451bfd47ef2a9b1a85b063e6220152902e06d1/inc/sfm_i2c_interface.hpp"><code>inc/sfm_i2c_interface.hpp</code></a></td>
 <td>Four methods of your port, one optional</td>
 <td>Never</td>
 </tr>

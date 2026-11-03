@@ -105,6 +105,47 @@
   <meta property="og:description" content="Header-only C++17 driver for Sensirion SF06-family gas mass flow meters such as the SFM4300 (I2C): gas and mixture measurement, CRC-checked reads, averaging, sleep and product identification.">
   <meta property="og:url" content="https://hardfoc.github.io/hf-sfm-flow-meter-driver/latest/i2c-protocol/">
   <meta name="twitter:card" content="summary">
+  <script>
+(function () {
+  if (typeof mermaid != "undefined" && !(mermaid instanceof Element)) return;
+  var SRC = "https://unpkg.com/mermaid@11/dist/mermaid.min.js", config = {}, real, loading, waiting = [];
+  var stub = {
+    initialize: function (c) { config = c || {}; if (real) real.initialize(config); },
+    render: function (id, text) {
+      var el = null, pres = document.querySelectorAll("pre.mermaid:not([data-hf-mermaid])");
+      for (var i = 0; i < pres.length && !el; i++) if (pres[i].textContent === text) el = pres[i];
+      if (el) el.setAttribute("data-hf-mermaid", "");
+      return near(el).then(load).then(function (m) { return m.render(id, text); });
+    }
+  };
+  function load() {
+    return loading || (loading = new Promise(function (resolve, reject) {
+      var s = document.createElement("script");
+      s.src = SRC;
+      s.onload = function () {
+        real = window.mermaid;
+        window.mermaid = stub;
+        real.initialize(config);
+        resolve(real);
+      };
+      s.onerror = function () { loading = null; reject(new Error("Mermaid did not load")); };
+      document.head.appendChild(s);
+    }));
+  }
+  function near(el) {
+    if (real || !el || !("IntersectionObserver" in window)) return Promise.resolve();
+    return new Promise(function (resolve) {
+      var io = new IntersectionObserver(function (entries) {
+        if (entries.some(function (e) { return e.isIntersecting; })) { io.disconnect(); resolve(); }
+      }, { rootMargin: "100% 0px" });
+      io.observe(el);
+      waiting.push(function () { io.disconnect(); resolve(); });
+    });
+  }
+  window.addEventListener("beforeprint", function () { waiting.splice(0).forEach(function (go) { go(); }); });
+  window.mermaid = stub;
+})();
+</script>
 
   </head>
   
@@ -1061,7 +1102,7 @@
 <p>The SF06 command set as the driver uses it: framing, every command, the frames the sensor returns, scaling and
 the status word.</p>
 <p>Source: <a href="https://sensirion.com/media/documents/024CBAA1/62987ADF/Sensirion_Datasheet_SFM4300.pdf">SFM4300 datasheet</a>,
-section 4. The constants are in <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/f81b925f6b0b202fe26333430fd0e02acb90f4d6/inc/sfm_commands.hpp"><code>inc/sfm_commands.hpp</code></a>.</p>
+section 4. The constants are in <a href="https://github.com/hardfoc/hf-sfm-flow-meter-driver/blob/ce451bfd47ef2a9b1a85b063e6220152902e06d1/inc/sfm_commands.hpp"><code>inc/sfm_commands.hpp</code></a>.</p>
 <h2 id="framing">Framing<a class="headerlink" href="#framing" title="Permanent link">&para;</a></h2>
 <ul>
 <li>A command is <strong>16 bits</strong>, MSB first, written without a register byte.</li>
