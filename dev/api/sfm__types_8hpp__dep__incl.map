@@ -1,0 +1,8 @@
+<map id="inc/sfm_types.hpp" name="inc/sfm_types.hpp">
+<area shape="rect" id="Node000001" title="Flow&#45;meter types: families, gases, variants, readings, status word, results." alt="" coords="5,5,147,31"/>
+<area shape="rect" id="Node000002" href="$sfm_8hpp.html" title="Umbrella header for the HF&#45;SFM (Sensirion SF06&#45;family) flow&#45;meter driver." alt="" coords="27,152,125,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,44,51,79,50,99,54,118,70,150,65,153,49,120,44,99,45,78,59,42"/>
+<area shape="rect" id="Node000003" href="$sfm__driver_8hpp.html" title="Sensirion flow&#45;meter I2C client: SF06 (SFM4300 data sheet §4) and SFx6000 (SFM6000D,..." alt="" coords="59,79,202,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="95,40,124,77,120,80,91,43"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="115,117,87,154,83,150,111,113"/>
+</map>
